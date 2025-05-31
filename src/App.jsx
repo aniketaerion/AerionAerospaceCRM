@@ -1,79 +1,70 @@
-// src/App.jsx
+// In src/components/GoogleCalendarIntegration.jsx (or wherever you use it)
+import { gapi } from 'gapi-script';
+import React, { useEffect, useState, useCallback } from 'react';
 
-import { useState, useEffect } from 'react'; // Keep useState, add useEffect
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import './App.css';
-import { supabase } from './supabaseClient'; // <-- This imports your Supabase client
+// Access the client ID from Vite's environment variables
+const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+// You should also define your scopes
+const SCOPES = 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar'; // Add any other necessary scopes
 
-function App() {
-  const [count, setCount] = useState(0); // Existing state
-  const [leads, setLeads] = useState([]); // New state for leads
-  const [loading, setLoading] = useState(true); // New state for loading status
+function GoogleCalendarIntegration({ onLoginStatusChange }) {
+  const [gapiLoaded, setGapiLoaded] = useState(false);
+  const [auth2Instance, setAuth2Instance] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const fetchLeads = async () => {
-      setLoading(true); // Start loading
-      // Fetch data from the 'leads' table
-      // This will be affected by your Row Level Security (RLS) policies
-      let { data, error } = await supabase.from('leads').select('*');
+    // Load gapi script
+    const script = document.createElement('script');
+    script.src = 'https://apis.google.com/js/api.js';
+    script.onload = () => setGapiLoaded(true);
+    document.body.appendChild(script);
+  }, []);
 
-      if (error) {
-        console.error('Error fetching leads:', error);
+  useEffect(() => {
+    if (gapiLoaded) {
+      // Initialize gapi client
+      gapi.load('client:auth2', async () => {
+        await gapi.client.init({
+          apiKey: import.meta.env.VITE_GOOGLE_API_KEY, // If you use an API Key for public data
+          clientId: CLIENT_ID,
+          scope: SCOPES,
+          discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
+        });
+
+        const authInstance = gapi.auth2.getAuthInstance();
+        setAuth2Instance(authInstance);
+
+        const updateLoginStatus = (isSignedIn) => {
+          setIsLoggedIn(isSignedIn);
+          onLoginStatusChange(isSignedIn); // Notify parent component (App.jsx)
+        };
+
+        // Listen for sign-in state changes.
+        authInstance.isSignedIn.listen(updateLoginStatus);
+
+        // Set the initial sign-in state.
+        updateLoginStatus(authInstance.isSignedIn.get());
+      });
+    }
+  }, [gapiLoaded, onLoginStatusChange]); // Re-run if gapiLoaded or onLoginStatusChange changes
+
+  const handleAuthClick = () => {
+    if (auth2Instance) {
+      if (isLoggedIn) {
+        auth2Instance.signOut();
       } else {
-        setLeads(data); // Set the fetched leads to state
+        auth2Instance.signIn();
       }
-      console.log('Fetched Data (Leads):', data); // Log data to console
-      console.log('Fetch Error (if any):', error); // Log error to console
+    }
+  };
 
-      setLoading(false); // End loading
-    };
-
-    fetchLeads();
-  }, []); // Empty dependency array means this runs once on component mount
-
-  // This is the JSX (what your component renders)
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-
-      <hr /> {/* Divider for clarity */}
-      <h2>Supabase Leads Data Test:</h2>
-      {loading ? (
-        <p>Loading leads from Supabase...</p>
-      ) : leads.length > 0 ? (
-        <ul>
-          {leads.map((lead) => (
-            <li key={lead.id}>
-              Name: {lead.name}, Email: {lead.email}, Phone: {lead.phone}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No leads found or unable to fetch. Check browser console for errors and Supabase RLS policies.</p>
-      )}
-    </>
+    <div className="google-auth-controls">
+      <button onClick={handleAuthClick} disabled={!gapiLoaded}>
+        {isLoggedIn ? 'Sign Out of Google' : 'Sign In with Google'}
+      </button>
+    </div>
   );
 }
 
-export default App;
+export default GoogleCalendarIntegration;
