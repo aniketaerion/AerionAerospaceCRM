@@ -1,70 +1,158 @@
-// In src/components/GoogleCalendarIntegration.jsx (or wherever you use it)
-import { gapi } from 'gapi-script';
-import React, { useEffect, useState, useCallback } from 'react';
+// src/app.jsx
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from 'react-router-dom';
 
-// Access the client ID from Vite's environment variables
-const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-// You should also define your scopes
-const SCOPES = 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar'; // Add any other necessary scopes
+import supabase from './supabaseClient'; // Your Supabase client instance
 
-function GoogleCalendarIntegration({ onLoginStatusChange }) {
-  const [gapiLoaded, setGapiLoaded] = useState(false);
-  const [auth2Instance, setAuth2Instance] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
+import Dashboard from './pages/Dashboard';
+import LeadForm from './pages/LeadForm';
+import Navbar from './components/Navbar';
+
+// Route constants
+const ROUTES = {
+  LOGIN: '/login',
+  SIGNUP: '/signup',
+  DASHBOARD: '/dashboard',
+  LEAD_FORM: '/leadform',
+  ROOT: '/',
+  NOT_FOUND: '*',
+};
+
+// --- Auth Context ---
+const AuthContext = createContext();
+
+export const useAuth = () => useContext(AuthContext);
+
+const AuthProvider = ({ children }) => {
+  const [authToken, setAuthToken] = useState(null);
 
   useEffect(() => {
-    // Load gapi script
-    const script = document.createElement('script');
-    script.src = 'https://apis.google.com/js/api.js';
-    script.onload = () => setGapiLoaded(true);
-    document.body.appendChild(script);
+    // Initial load from localStorage
+    const token = localStorage.getItem('authToken');
+    setAuthToken(token);
+
+    // Subscribe to Supabase auth state changes to keep token synced
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (session?.access_token) {
+          localStorage.setItem('authToken', session.access_token);
+          setAuthToken(session.access_token);
+        } else {
+          localStorage.removeItem('authToken');
+          setAuthToken(null);
+        }
+      }
+    );
+
+    // Cleanup subscription on unmount
+    return () => {
+      authListener?.unsubscribe();
+    };
   }, []);
 
-  useEffect(() => {
-    if (gapiLoaded) {
-      // Initialize gapi client
-      gapi.load('client:auth2', async () => {
-        await gapi.client.init({
-          apiKey: import.meta.env.VITE_GOOGLE_API_KEY, // If you use an API Key for public data
-          clientId: CLIENT_ID,
-          scope: SCOPES,
-          discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
-        });
-
-        const authInstance = gapi.auth2.getAuthInstance();
-        setAuth2Instance(authInstance);
-
-        const updateLoginStatus = (isSignedIn) => {
-          setIsLoggedIn(isSignedIn);
-          onLoginStatusChange(isSignedIn); // Notify parent component (App.jsx)
-        };
-
-        // Listen for sign-in state changes.
-        authInstance.isSignedIn.listen(updateLoginStatus);
-
-        // Set the initial sign-in state.
-        updateLoginStatus(authInstance.isSignedIn.get());
-      });
-    }
-  }, [gapiLoaded, onLoginStatusChange]); // Re-run if gapiLoaded or onLoginStatusChange changes
-
-  const handleAuthClick = () => {
-    if (auth2Instance) {
-      if (isLoggedIn) {
-        auth2Instance.signOut();
-      } else {
-        auth2Instance.signIn();
-      }
-    }
+  const login = (token) => {
+    localStorage.setItem('authToken', token);
+    setAuthToken(token);
   };
 
+  const logout = async () => {
+    await supabase.auth.signOut();
+    localStorage.removeItem('authToken');
+    setAuthToken(null);
+  };
+
+  const isAuthenticated = !!authToken;
+
   return (
-    <div className="google-auth-controls">
-      <button onClick={handleAuthClick} disabled={!gapiLoaded}>
-        {isLoggedIn ? 'Sign Out of Google' : 'Sign In with Google'}
-      </button>
+    <AuthContext.Provider value={{ authToken, isAuthenticated, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+// --- PrivateRoute ---
+const PrivateRoute = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? children : <Navigate to={ROUTES.LOGIN} replace />;
+};
+
+// --- AppRoutes ---
+const AppRoutes = () => {
+  const location = useLocation();
+  const hideNavbarRoutes = [ROUTES.LOGIN, ROUTES.SIGNUP];
+  const shouldShowNavbar = !hideNavbarRoutes.includes(location.pathname);
+
+  const { isAuthenticated } = useAuth();
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {shouldShowNavbar && <Navbar />}
+
+      <Routes>
+        <Route
+          path={ROUTES.ROOT}
+          element={
+            isAuthenticated ? (
+              <Navigate to={ROUTES.DASHBOARD} replace />
+            ) : (
+              <Navigate to={ROUTES.LOGIN} replace />
+            )
+          }
+        />
+
+        <Route
+          path={ROUTES.LOGIN}
+          element={
+            isAuthenticated ? <Navigate to={ROUTES.DASHBOARD} replace /> : <LoginPage />
+          }
+        />
+
+        <Route
+          path={ROUTES.SIGNUP}
+          element={
+            isAuthenticated ? <Navigate to={ROUTES.DASHBOARD} replace /> : <SignupPage />
+          }
+        />
+
+        <Route
+          path={ROUTES.DASHBOARD}
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.LEAD_FORM}
+          element={
+            <PrivateRoute>
+              <LeadForm />
+            </PrivateRoute>
+          }
+        />
+
+        <Route path={ROUTES.NOT_FOUND} element={<Navigate to={ROUTES.ROOT} replace />} />
+      </Routes>
     </div>
   );
-}
+};
 
-export default GoogleCalendarIntegration;
+// --- Main App ---
+const App = () => (
+  <AuthProvider>
+    <Router>
+      <AppRoutes />
+    </Router>
+  </AuthProvider>
+);
+
+export default App;

@@ -1,13 +1,13 @@
-import { supabase } from "../../supabaseClient"; // adjust path to your setup
+import supabase from "../supabaseClient"; // adjust path to your setup
 
 export async function upsertLead(leadData) {
-  const { phone, email, created_at = new Date().toISOString() } = leadData;
+  const { phone_number, email, created_at = new Date().toISOString() } = leadData;
 
   // 1. Check if a lead already exists with this phone or email
   const { data: existingLead, error: fetchError } = await supabase
     .from("leads")
     .select("*")
-    .or(`phone.eq.${phone},email.eq.${email}`)
+    .or(`phone_number.eq.${phone_number},email.eq.${email}`)
     .maybeSingle(); // returns null if no match
 
   if (fetchError) throw new Error("Fetch error: " + fetchError.message);
