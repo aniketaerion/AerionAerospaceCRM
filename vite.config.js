@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   resolve: {
@@ -10,7 +11,6 @@ export default defineConfig({
     },
   },
   server: {
-    // This ensures deep links like /signup or /login work
-    historyApiFallback: true,
+    historyApiFallback: true, // Supports client-side routing (e.g., React Router)
   },
 });
