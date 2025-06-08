@@ -17,7 +17,7 @@ const ROUTES = {
 };
 
 const DealerPortalLayout = ({ dealerName = "Aerion Aerospace Dealers" }) => {
-    // In a real application, you might use useAuth() to get logout function
+    // In a real application, you might use useAuth() to get logout functn
     // For now, a simple logout placeholder
     const handleLogout = () => {
         // Implement actual logout logic here if needed, or rely on main app's logout
