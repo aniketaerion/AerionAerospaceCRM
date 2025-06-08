@@ -11,7 +11,6 @@ export default [
       ecmaVersion: 2020,
       globals: globals.browser,
       parserOptions: {
-        ecmaVersion: 'latest',
         ecmaFeatures: { jsx: true },
         sourceType: 'module',
       },
@@ -28,6 +27,13 @@ export default [
         'warn',
         { allowConstantExport: true },
       ],
+    },
+    settings: {
+      'import/resolver': {
+        node: {
+          caseSensitive: true,
+        },
+      },
     },
   },
 ]
