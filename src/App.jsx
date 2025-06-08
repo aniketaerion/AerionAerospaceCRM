@@ -18,7 +18,7 @@ import LeadForm from './pages/LeadForm';
 import Navbar from './components/Navbar';
 
 // Dealer layout and pages
-import DealerPortalLayout from './layouts/DealerPortalLayout.jsx';
+import DealerPortalLayout from "@/layouts/DealerPortalLayout.jsx";
 import DealerDashboard from './pages/dealer/DealerDashboard.jsx';
 import PlaceNewOrder from './pages/dealer/PlaceNewOrder.jsx';
 import MyOrders from './pages/dealer/MyOrders.jsx';
