@@ -1,7 +1,6 @@
 // src/App.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import {
-  BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
@@ -17,17 +16,18 @@ import Dashboard from './pages/Dashboard';
 import LeadForm from './pages/LeadForm';
 import Navbar from './components/Navbar';
 
-// Dealer layout and pages
-import DealerPortalLayout from "./layouts/DealerPortalLayout.jsx";
+// Dealer layout and pages (✅ all .jsx)
+import DealerPortalLayout from './layouts/DealerPortalLayout.jsx';
 import DealerDashboard from './pages/dealer/DealerDashboard.jsx';
 import PlaceNewOrder from './pages/dealer/PlaceNewOrder.jsx';
 import MyOrders from './pages/dealer/MyOrders.jsx';
-import OrderDetail from './pages/dealer/OrderDetail.js';
+import OrderDetail from './pages/dealer/OrderDetail.tsx';
 import RepairRequests from './pages/dealer/RepairRequests.jsx';
 import MarketingClaims from './pages/dealer/MarketingClaims.jsx';
 import MyInventory from './pages/dealer/MyInventory.jsx';
 import AccountDetails from './pages/dealer/AccountDetails.jsx';
 
+// Route constants
 const ROUTES = {
   LOGIN: '/login',
   SIGNUP: '/signup',
@@ -46,6 +46,7 @@ const ROUTES = {
   DEALER_ACCOUNT: '/dealer/account',
 };
 
+// Auth context and hooks
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
@@ -100,7 +101,6 @@ const PrivateRoute = ({ children }) => {
 
 const AppRoutes = () => {
   const location = useLocation();
-
   const isDealerRoute = location.pathname.startsWith(ROUTES.DEALER_ROOT);
   const hideNavbarRoutes = [ROUTES.LOGIN, ROUTES.SIGNUP];
   const shouldShowNavbar = !hideNavbarRoutes.includes(location.pathname) && !isDealerRoute;
@@ -143,7 +143,7 @@ const AppRoutes = () => {
           element={<PrivateRoute><LeadForm /></PrivateRoute>}
         />
 
-        {/* Dealer portal layout and nested routes */}
+        {/* Dealer Portal Routes */}
         <Route
           path={ROUTES.DEALER_ROOT + '/*'}
           element={<PrivateRoute><DealerPortalLayout dealerName="Your Dealership Name" /></PrivateRoute>}
@@ -168,9 +168,7 @@ const AppRoutes = () => {
 
 const App = () => (
   <AuthProvider>
-    <Router>
-      <AppRoutes />
-    </Router>
+    <AppRoutes />
   </AuthProvider>
 );
 
