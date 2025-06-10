@@ -1,39 +1,32 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
+// eslint.config.js
+import js from "@eslint/js";
+import globals from "globals";
+import tseslint from "typescript-eslint";
+import pluginReact from "eslint-plugin-react";
 
+/** @type {import("eslint").FlatConfig[]} */
 export default [
-  { ignores: ['dist'] },
+  js.configs.recommended,
+  ...tseslint.configs.recommended, // ✅ Spread the array!
+  pluginReact.configs.flat.recommended,
   {
-    files: ['**/*.{js,jsx}'],
+    files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
     languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
-      parserOptions: {
-        ecmaFeatures: { jsx: true },
-        sourceType: 'module',
+      globals: {
+        ...globals.browser,
+        ...globals.node,
       },
-    },
-    plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
+      ecmaVersion: "latest",
+      sourceType: "module",
     },
     rules: {
-      ...js.configs.recommended.rules,
-      ...reactHooks.configs.recommended.rules,
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
+      "no-console": "warn",
+      "no-unused-vars": [
+        "warn",
+        { vars: "all", args: "after-used", ignoreRestSiblings: true },
       ],
-    },
-    settings: {
-      'import/resolver': {
-        node: {
-          caseSensitive: true,
-        },
-      },
+      "react/react-in-jsx-scope": "off",
+      "react/prop-types": "off",
     },
   },
-]
+];
