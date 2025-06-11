@@ -1,36 +1,31 @@
-/* Logo sits centred and never stretches */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Styles */
+
 .logo-container {
-  text-align: center;
-  margin-bottom: 1.5rem; /* 24 px */
+  @apply text-center mb-6;
 }
 
 .logo-img {
-  width: 120px; /* tweak as you like */
-  height: auto; /* keep aspect ratio */
+  width: 120px;
+  height: auto;
 }
 
-/* --- form element helpers you already had --- */
 .input {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #d1d5db; /* gray-300 */
-  border-radius: 0.5rem;
-  outline: none;
+  @apply w-full p-3 border border-gray-300 rounded-lg outline-none;
 }
+
 .input:focus {
-  box-shadow: 0 0 0 2px hsl(217, 91%, 60%); /* ring-blue-500 */
+  box-shadow: 0 0 0 2px hsl(217, 91%, 60%);
   border-color: #3b82f6;
 }
 
 .btn-primary {
-  background-color: #2563eb; /* blue-600 */
-  color: #fff;
-  padding: 12px;
-  border-radius: 0.5rem;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  @apply bg-blue-600 text-white p-3 rounded-lg border-none cursor-pointer transition-colors;
 }
+
 .btn-primary:hover {
-  background-color: #1d4ed8; /* blue-700 */
+  @apply bg-blue-700;
 }
