@@ -1,30 +1,39 @@
-// src/pages/dealer/DealerDashboard.jsx
-import React from 'react';
+// Batch 1 - Dealer CRM Production Code - Aerion Aerospace CRM
+// File 1: DealerDashboard.jsx
 
-const DealerDashboard = () => {
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+export default function DealerDashboard() {
   return (
-    <div style={{ padding: '20px', backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}>
-      <h2 style={{ color: '#0A2558', marginBottom: '20px' }}>Dealer Dashboard Overview</h2>
-      <p style={{ color: '#555' }}>
-        Welcome to your dealer portal dashboard. Here you can see key metrics and recent activities.
-      </p>
-      {/* Add dashboard widgets, charts, etc. here */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginTop: '30px' }}>
-        <div style={{ padding: '15px', border: '1px solid #eee', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
-          <h3 style={{ color: '#0A2558' }}>Total Orders</h3>
-          <p style={{ fontSize: '1.8em', fontWeight: 'bold', color: '#F0B800' }}>125</p>
-        </div>
-        <div style={{ padding: '15px', border: '1px solid #eee', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
-          <h3 style={{ color: '#0A2558' }}>Pending Repairs</h3>
-          <p style={{ fontSize: '1.8em', fontWeight: 'bold', color: '#F0B800' }}>7</p>
-        </div>
-        <div style={{ padding: '15px', border: '1px solid #eee', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
-          <h3 style={{ color: '#0A2558' }}>Inventory Value</h3>
-          <p style={{ fontSize: '1.8em', fontWeight: 'bold', color: '#F0B800' }}>₹12.5M</p>
-        </div>
+    <div className="p-6 bg-[#003DA5] min-h-screen text-white">
+      <h1 className="text-3xl font-bold mb-6">Dealer Dashboard</h1>
+      <div className="grid grid-cols-2 gap-6">
+        <Link to="/dealer/business-profile" className="bg-[#FFE500] text-[#003DA5] p-6 rounded-2xl shadow-xl text-center font-semibold text-xl hover:scale-105 transition">
+          Business Profile
+        </Link>
+        <Link to="/dealer/financial-details" className="bg-[#FFE500] text-[#003DA5] p-6 rounded-2xl shadow-xl text-center font-semibold text-xl hover:scale-105 transition">
+          Financial Details
+        </Link>
+        <Link to="/dealer/my-customers" className="bg-[#FFE500] text-[#003DA5] p-6 rounded-2xl shadow-xl text-center font-semibold text-xl hover:scale-105 transition">
+          My Customers
+        </Link>
+        <Link to="/dealer/my-inventory" className="bg-[#FFE500] text-[#003DA5] p-6 rounded-2xl shadow-xl text-center font-semibold text-xl hover:scale-105 transition">
+          My Inventory
+        </Link>
+        <Link to="/dealer/my-orders" className="bg-[#FFE500] text-[#003DA5] p-6 rounded-2xl shadow-xl text-center font-semibold text-xl hover:scale-105 transition">
+          My Orders
+        </Link>
+        <Link to="/dealer/my-team" className="bg-[#FFE500] text-[#003DA5] p-6 rounded-2xl shadow-xl text-center font-semibold text-xl hover:scale-105 transition">
+          My Team
+        </Link>
+        <Link to="/dealer/repair-requests" className="bg-[#FFE500] text-[#003DA5] p-6 rounded-2xl shadow-xl text-center font-semibold text-xl hover:scale-105 transition">
+          Repair Requests
+        </Link>
+      </div>
+      <div className="mt-8 text-center text-sm opacity-70">
+        Aerion Aerospace CRM v1.0
       </div>
     </div>
   );
-};
-
-export default DealerDashboard;
+}

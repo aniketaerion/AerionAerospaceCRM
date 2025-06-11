@@ -1,42 +1,32 @@
-// src/pages/dealer/MyInventory.jsx
-import React from 'react';
+// File 6: MyInventory.jsx
 
-const MyInventory = () => {
-  // Dummy data for inventory
-  const inventoryItems = [
-    { id: 'inv001', product: 'Aerion X-Series Drone', quantity: 3, status: 'In Stock' },
-    { id: 'inv002', product: 'Aerion Y-Series Drone', quantity: 5, status: 'In Stock' },
-    { id: 'inv003', product: 'X-Series Propeller Set', quantity: 20, status: 'In Stock' },
-    { id: 'inv004', product: 'Aerion Z-Series Drone', quantity: 1, status: 'Low Stock' },
-  ];
+import React, { useState } from 'react';
+
+export default function MyInventory() {
+  const [inventory, setInventory] = useState([
+    { id: 1, productName: 'Trident Recon-X', stock: 10 },
+    { id: 2, productName: 'Trident Mule-VTOL 50', stock: 5 }
+  ]);
 
   return (
-    <div style={{ padding: '20px', backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}>
-      <h2 style={{ color: '#0A2558', marginBottom: '20px' }}>My Inventory</h2>
-      <p style={{ color: '#555', marginBottom: '20px' }}>View and manage your current stock of Aerion Aerospace products.</p>
-
-      <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+    <div className="p-6 bg-[#003DA5] min-h-screen text-white">
+      <h1 className="text-3xl font-bold mb-6">My Inventory</h1>
+      <table className="w-full bg-white text-black rounded shadow">
         <thead>
-          <tr style={{ backgroundColor: '#f2f2f2' }}>
-            <th style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'left' }}>ID</th>
-            <th style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'left' }}>Product</th>
-            <th style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'left' }}>Quantity</th>
-            <th style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'left' }}>Status</th>
+          <tr className="bg-[#FFE500]">
+            <th className="p-3">Product Name</th>
+            <th className="p-3">Stock Available</th>
           </tr>
         </thead>
         <tbody>
-          {inventoryItems.map(item => (
+          {inventory.map(item => (
             <tr key={item.id}>
-              <td style={{ padding: '12px', border: '1px solid #ddd' }}>{item.id}</td>
-              <td style={{ padding: '12px', border: '1px solid #ddd' }}>{item.product}</td>
-              <td style={{ padding: '12px', border: '1px solid #ddd' }}>{item.quantity}</td>
-              <td style={{ padding: '12px', border: '1px solid #ddd' }}>{item.status}</td>
+              <td className="p-3">{item.productName}</td>
+              <td className="p-3">{item.stock}</td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
   );
-};
-
-export default MyInventory;
+}
