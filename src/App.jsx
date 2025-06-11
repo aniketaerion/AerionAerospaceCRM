@@ -26,6 +26,8 @@ import RepairRequests from './pages/dealer/RepairRequests.jsx';
 import MarketingClaims from './pages/dealer/MarketingClaims.jsx';
 import MyInventory from './pages/dealer/MyInventory.jsx';
 import AccountDetails from './pages/dealer/AccountDetails.jsx';
+import MyCustomers from './pages/dealer/MyCustomers.jsx';
+import AddCustomerForm from './pages/dealer/AddCustomerForm.jsx'; // ADDED THIS LINE
 
 // Route constants
 const ROUTES = {
@@ -44,6 +46,8 @@ const ROUTES = {
   DEALER_MARKETING: '/dealer/marketing',
   DEALER_INVENTORY: '/dealer/inventory',
   DEALER_ACCOUNT: '/dealer/account',
+  DEALER_CUSTOMERS: '/dealer/customers', // ADDED THIS LINE
+  DEALER_ADD_CUSTOMER: '/dealer/customers/add', // ADDED THIS LINE
 };
 
 // Auth context and hooks
@@ -156,6 +160,8 @@ const AppRoutes = () => {
           <Route path="repairs" element={<RepairRequests />} />
           <Route path="marketing" element={<MarketingClaims />} />
           <Route path="inventory" element={<MyInventory />} />
+          <Route path="customers" element={<MyCustomers />} />
+          <Route path="customers/add" element={<AddCustomerForm />} /> {/* ADDED THIS LINE */}
           <Route path="account" element={<AccountDetails />} />
           <Route path="*" element={<h2>404 - Dealer Sub-Page Not Found</h2>} />
         </Route>
