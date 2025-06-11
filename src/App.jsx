@@ -17,15 +17,15 @@ import LeadForm from './pages/LeadForm';
 import Navbar from './components/Navbar';
 
 // Dealer layout and pages (✅ all .jsx)
-import DealerPortalLayout from './layouts/DealerPortalLayout';
-import DealerDashboard from './pages/dealer/DealerDashboard';
-import PlaceNewOrder from './pages/dealer/PlaceNewOrder';
-import MyOrders from './pages/dealer/MyOrders';
-import OrderDetail from './pages/dealer/OrderDetail';
-import RepairRequests from './pages/dealer/RepairRequests';
-import MarketingClaims from './pages/dealer/MarketingClaims';
-import MyInventory from './pages/dealer/MyInventory';
-import AccountDetails from './pages/dealer/AccountDetails';
+import DealerPortalLayout from './layouts/DealerPortalLayout.jsx';
+import DealerDashboard from './pages/dealer/DealerDashboard.jsx';
+import PlaceNewOrder from './pages/dealer/PlaceNewOrder.jsx';
+import MyOrders from './pages/dealer/MyOrders.jsx';
+import OrderDetail from './pages/dealer/OrderDetail.tsx';
+import RepairRequests from './pages/dealer/RepairRequests.jsx';
+import MarketingClaims from './pages/dealer/MarketingClaims.jsx';
+import MyInventory from './pages/dealer/MyInventory.jsx';
+import AccountDetails from './pages/dealer/AccountDetails.jsx';
 
 // Route constants
 const ROUTES = {
