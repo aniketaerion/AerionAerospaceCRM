@@ -66,33 +66,31 @@ import MarketingDashboard from './pages/dealer/marketing/dashboard/index.jsx';
 import ReportsDashboard from './pages/dealer/reports/dashboard/index.jsx';
 import DealerProfile from './pages/dealer/profile/index.jsx';
 
-const AppRoutes = () => {
-  const location = useLocation();
-  const { isAuthenticated } = useAuth();
+const AppRoutes = () => (
+  <Routes>
+    <Route
+      path="/dealer/*"
+      element={
+        <PrivateRoute>
+          <DealerPortalLayout />
+        </PrivateRoute>
+      }
+    >
+      <Route path="dashboard" element={<DealerDashboard />} />
+      <Route path="sales/dashboard" element={<SalesDashboard />} />
+      <Route path="crm/dashboard" element={<CRMDashboard />} />
+      <Route path="inventory/dashboard" element={<InventoryDashboard />} />
+      <Route path="finance/dashboard" element={<FinanceDashboard />} />
+      <Route path="service/dashboard" element={<ServiceDashboard />} />
+      <Route path="marketing/dashboard" element={<MarketingDashboard />} />
+      <Route path="reports/dashboard" element={<ReportsDashboard />} />
+      <Route path="profile" element={<DealerProfile />} />
+      <Route path="*" element={<Navigate to="dashboard" replace />} />
+    </Route>
 
-  return (
-    <Routes>
-      <Route
-        path="/dealer/*"
-        element={<PrivateRoute><DealerPortalLayout /></PrivateRoute>}
-      >
-        <Route index element={<Navigate to="dashboard" replace />} />
-        <Route path="dashboard" element={<DealerDashboard />} />
-        <Route path="sales/dashboard" element={<SalesDashboard />} />
-        <Route path="crm/dashboard" element={<CRMDashboard />} />
-        <Route path="inventory/dashboard" element={<InventoryDashboard />} />
-        <Route path="finance/dashboard" element={<FinanceDashboard />} />
-        <Route path="service/dashboard" element={<ServiceDashboard />} />
-        <Route path="marketing/dashboard" element={<MarketingDashboard />} />
-        <Route path="reports/dashboard" element={<ReportsDashboard />} />
-        <Route path="profile" element={<DealerProfile />} />
-        <Route path="*" element={<h2>404 - Dealer Sub-Page Not Found</h2>} />
-      </Route>
-
-      <Route path="*" element={<Navigate to="/dealer/dashboard" replace />} />
-    </Routes>
-  );
-};
+    <Route path="*" element={<Navigate to="/dealer/dashboard" replace />} />
+  </Routes>
+);
 
 const App = () => (
   <AuthProvider>
