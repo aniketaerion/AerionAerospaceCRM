@@ -1,7 +1,7 @@
 // src/layouts/DealerPortalLayout.tsx
 import { Sidebar } from '@/components/Sidebar';
 import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
+import  Footer  from '@/components/Footer';
 import { DealerContext } from '@/contexts/DealerContext';
 
 export default function DealerPortalLayout({ children }) {
