@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import supabase from "../supabaseClient";
-import logo from "../assets/logo.png";
+import supabase from "@/supabaseClient";
+import logo from "@/assets/logo.png";
 
 function LoginPage() {
   const navigate = useNavigate();
