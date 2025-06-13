@@ -58,7 +58,7 @@ const PrivateRoute = ({ children }) => {
 import DealerPortalLayout from './layouts/DealerPortalLayout.jsx';
 import DealerDashboard from './pages/dealer/dashboard/index.jsx';
 import SalesDashboard from './pages/dealer/sales/dashboard/index.jsx';
-import CRMDashboard from './pages/dealer/crm/dashboard/index.jsx';
+import CrmDashboard from './pages/dealer/crm/leads/CrmDashboard.jsx'; // ✅ Correct path & file name
 import InventoryDashboard from './pages/dealer/inventory/dashboard/index.jsx';
 import FinanceDashboard from './pages/dealer/finance/dashboard/index.jsx';
 import ServiceDashboard from './pages/dealer/service/dashboard/index.jsx';
