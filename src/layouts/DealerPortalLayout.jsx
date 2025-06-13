@@ -1,10 +1,11 @@
-// src/layouts/DealerPortalLayout.tsx
+// src/layouts/DealerPortalLayout.jsx
 import { Sidebar } from '@/components/Sidebar';
 import { Header } from '@/components/Header';
-import  Footer  from '@/components/Footer';
+import Footer from '@/components/Footer';
 import { DealerContext } from '@/contexts/DealerContext';
+import { Outlet } from 'react-router-dom'; // Required for nested routes
 
-export default function DealerPortalLayout({ children }) {
+export default function DealerPortalLayout() {
   return (
     <DealerContext.Provider value={{
       dealerName: 'Shakti Agro Drones',
@@ -15,8 +16,8 @@ export default function DealerPortalLayout({ children }) {
         <Header />
         <div className="flex flex-1">
           <Sidebar />
-          <main className="flex-1 bg-gray-50 p-4 overflow-y-auto">
-            {children}
+          <main className="flex-1 bg-gray-50 p-6 overflow-y-auto">
+            <Outlet /> {/* Nested routes render here */}
           </main>
         </div>
         <Footer />
