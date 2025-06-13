@@ -1,7 +1,7 @@
 // src/App.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
-import supabase from './supabaseClient';
+import supabase from '@/supabaseClient';
 
 // Auth context and hooks
 const AuthContext = createContext();
