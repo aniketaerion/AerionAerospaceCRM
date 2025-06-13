@@ -1,6 +1,6 @@
 // src/App.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import supabase from './supabaseClient';
 
 // Auth context and hooks
@@ -65,12 +65,13 @@ import ServiceDashboard from './pages/dealer/service/dashboard/index.jsx';
 import MarketingDashboard from './pages/dealer/marketing/dashboard/index.jsx';
 import ReportsDashboard from './pages/dealer/reports/dashboard/index.jsx';
 import DealerProfile from './pages/dealer/profile/index.jsx';
+import LoginPage from './pages/login/LoginPage.jsx';
 
 const AppRoutes = () => {
-  const location = useLocation();
-
   return (
     <Routes>
+      <Route path="/login" element={<LoginPage />} />
+
       <Route
         path="/dealer/*"
         element={
@@ -91,7 +92,7 @@ const AppRoutes = () => {
         <Route path="*" element={<Navigate to="dashboard" replace />} />
       </Route>
 
-      <Route path="*" element={<Navigate to="/dealer/dashboard" replace />} />
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 };
