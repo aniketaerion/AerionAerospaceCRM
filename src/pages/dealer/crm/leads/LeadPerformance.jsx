@@ -1,3 +1,6 @@
+
+// src/pages/dealer/crm/leads/LeadPerformance.jsx
+
 import React, { useState } from 'react';
 
 export default function LeadPerformance() {
@@ -48,11 +51,10 @@ export default function LeadPerformance() {
   ];
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-2xl font-bold mb-6">📊 Lead Performance Dashboard</h1>
+    <div className="p-6 space-y-6">
+      <h2 className="text-2xl font-bold">📊 Lead Performance Dashboard</h2>
 
-      {/* Filters */}
-      <div className="mb-6 flex items-center gap-4">
+      <div className="flex items-center gap-4">
         <label className="font-medium text-gray-600">Date Range:</label>
         <select
           value={dateRange}
@@ -66,15 +68,15 @@ export default function LeadPerformance() {
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card title="Total Leads" value={totalLeads} />
         <Card title="Conversion Rate" value={overallConversionRate} />
         <Card title="Avg. Response Time" value={avgResponseTime} />
         <Card title="Avg. Sales Cycle" value={avgSalesCycle} />
       </div>
 
-      {/* Funnel & Stage Conversion */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      {/* Funnel + Stage Conversion */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Section title="Lead Funnel Breakdown">
           <ul className="space-y-2">
             {leadFunnel.map((item, i) => (
@@ -98,8 +100,8 @@ export default function LeadPerformance() {
         </Section>
       </div>
 
-      {/* Source & Status */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      {/* Lead Sources + Status */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Section title="Leads by Source">
           <table className="w-full text-sm">
             <thead className="text-left border-b">
@@ -133,7 +135,7 @@ export default function LeadPerformance() {
         </Section>
       </div>
 
-      {/* Campaign Performance */}
+      {/* Campaigns */}
       <Section title={`Campaign Performance (${activeCampaigns} Active)`}>
         <table className="w-full text-sm">
           <thead className="text-left border-b">
@@ -161,15 +163,15 @@ export default function LeadPerformance() {
 }
 
 const Card = ({ title, value }) => (
-  <div className="bg-white rounded-lg shadow p-5 border border-gray-200">
+  <div className="bg-white rounded shadow p-4 border">
     <p className="text-sm text-gray-500">{title}</p>
-    <h3 className="text-2xl font-bold">{value}</h3>
+    <h3 className="text-xl font-bold">{value}</h3>
   </div>
 );
 
 const Section = ({ title, children }) => (
-  <div className="bg-white rounded-lg shadow p-5 border border-gray-200">
-    <h4 className="text-lg font-semibold mb-3 text-gray-800">{title}</h4>
+  <div className="bg-white rounded shadow p-4 border space-y-3">
+    <h4 className="text-lg font-semibold">{title}</h4>
     {children}
   </div>
 );

@@ -1,47 +1,55 @@
 // src/pages/dealer/crm/leads/CrmDashboard.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { WidgetCard } from '@/components/WidgetCard';
 
 export default function CrmDashboard() {
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">CRM Dashboard</h2>
+      <h1 className="text-2xl font-bold mb-6">CRM Dashboard</h1>
 
-      {/* Summary Widgets */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <WidgetCard title="Total Customers" value="960" icon="👥" />
-        <WidgetCard title="New Leads" value="128" icon="📥" />
-        <WidgetCard title="Follow-Ups Today" value="34" icon="📞" />
-        <WidgetCard title="Customer LTV" value="₹2.1L" icon="📈" />
+        <Link to="/dealer/crm/leads/list" className="bg-white shadow rounded p-4 hover:shadow-md">
+          <h2 className="text-sm font-semibold text-gray-500">Total Customers</h2>
+          <p className="text-2xl font-bold">960</p>
+        </Link>
+        <Link to="/dealer/crm/leads/create" className="bg-white shadow rounded p-4 hover:shadow-md">
+          <h2 className="text-sm font-semibold text-gray-500">New Leads</h2>
+          <p className="text-2xl font-bold">128</p>
+        </Link>
+        <Link to="/dealer/crm/leads/tasks" className="bg-white shadow rounded p-4 hover:shadow-md">
+          <h2 className="text-sm font-semibold text-gray-500">Follow-Ups Today</h2>
+          <p className="text-2xl font-bold">34</p>
+        </Link>
+        <Link to="/dealer/crm/leads/analytics" className="bg-white shadow rounded p-4 hover:shadow-md">
+          <h2 className="text-sm font-semibold text-gray-500">Customer LTV</h2>
+          <p className="text-2xl font-bold">₹2.1L</p>
+        </Link>
       </div>
 
-      {/* Status Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-white rounded shadow p-4 border-l-4 border-blue-500">
-          <h4 className="text-lg font-semibold">Total Leads</h4>
-          <p className="text-2xl">187</p>
-        </div>
-        <div className="bg-white rounded shadow p-4 border-l-4 border-green-500">
-          <h4 className="text-lg font-semibold">Converted</h4>
-          <p className="text-2xl">64</p>
-        </div>
-        <div className="bg-white rounded shadow p-4 border-l-4 border-yellow-500">
-          <h4 className="text-lg font-semibold">In Progress</h4>
-          <p className="text-2xl">102</p>
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <Link to="/dealer/crm/leads/list" className="bg-white border rounded p-4 hover:bg-gray-50">
+          <h3 className="text-base font-medium">Total Leads</h3>
+          <p className="text-xl font-bold">187</p>
+        </Link>
+        <Link to="/dealer/crm/leads/analytics" className="bg-white border rounded p-4 hover:bg-gray-50">
+          <h3 className="text-base font-medium">Converted</h3>
+          <p className="text-xl font-bold">64</p>
+        </Link>
+        <Link to="/dealer/crm/leads/list" className="bg-white border rounded p-4 hover:bg-gray-50">
+          <h3 className="text-base font-medium">In Progress</h3>
+          <p className="text-xl font-bold">102</p>
+        </Link>
       </div>
 
-      {/* Quick Navigation */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        <Link to="/crm/leads/list" className="btn-primary text-center">📋 View Leads</Link>
-        <Link to="/crm/leads/add" className="btn-secondary text-center">➕ Create / Import Lead</Link>
-        <Link to="/crm/leads/analytics" className="btn-secondary text-center">📊 Lead Analytics</Link>
-        <Link to="/crm/leads/campaigns" className="btn-secondary text-center">📣 Campaigns</Link>
-        <Link to="/crm/leads/contacts" className="btn-secondary text-center">👤 Contacts</Link>
-        <Link to="/crm/leads/tasks" className="btn-secondary text-center">📝 Tasks</Link>
-        <Link to="/crm/leads/reminders" className="btn-secondary text-center">⏰ Reminders</Link>
-        <Link to="/crm/leads/bulkassignments" className="btn-secondary text-center">📦 Bulk Assignments</Link>
+      <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 text-center">
+        <Link to="/dealer/crm/leads/list" className="text-sm text-blue-600 hover:underline">View Leads</Link>
+        <Link to="/dealer/crm/leads/create" className="text-sm text-blue-600 hover:underline">Create / Import Lead</Link>
+        <Link to="/dealer/crm/leads/analytics" className="text-sm text-blue-600 hover:underline">Lead Analytics</Link>
+        <Link to="/dealer/crm/leads/campaigns" className="text-sm text-blue-600 hover:underline">Campaigns</Link>
+        <Link to="/dealer/crm/leads/contacts" className="text-sm text-blue-600 hover:underline">Contacts</Link>
+        <Link to="/dealer/crm/leads/tasks" className="text-sm text-blue-600 hover:underline">Tasks</Link>
+        <Link to="/dealer/crm/leads/reminders" className="text-sm text-blue-600 hover:underline">Reminders</Link>
+        <Link to="/dealer/crm/leads/bulk" className="text-sm text-blue-600 hover:underline">Bulk Assignments</Link>
       </div>
     </div>
   );
