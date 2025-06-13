@@ -69,7 +69,7 @@ import Reminders from './pages/dealer/crm/leads/Reminders.jsx';
 import Campaigns from './pages/dealer/crm/leads/Campaigns.jsx';
 import Contacts from './pages/dealer/crm/leads/Contacts.jsx';
 import BulkAssignments from './pages/dealer/crm/leads/BulkAssignments.jsx';
-import LeadModuleTabs from './pages/dealer/crm/leads/index.jsx';
+import LeadModuleTabs from './pages/dealer/crm/leads/Index.jsx';
 import LeadDetail from './pages/dealer/crm/leads/LeadDetail.jsx';
 
 // Dealer System Dashboards
