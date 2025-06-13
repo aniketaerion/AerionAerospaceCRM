@@ -1,10 +1,13 @@
+// src/pages/login/LoginPage.jsx
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import supabase from "@/supabaseClient";
 import logo from "@/assets/logo.png";
+import { useAuth } from "@/App";
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { login } = useAuth(); // ✅ use context
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -24,9 +27,10 @@ function LoginPage() {
     if (error) {
       setError(error.message);
     } else {
-      localStorage.setItem("authToken", data.session.access_token);
-      navigate("/dashboard");
+      login(data.session.access_token); // ✅ sets context & localStorage
+      navigate("/dealer/dashboard");   // ✅ redirect to correct route
     }
+
     setLoading(false);
   };
 
@@ -84,7 +88,6 @@ function LoginPage() {
               tabIndex={-1}
             >
               {showPassword ? (
-                // Hide icon
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
                   viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round"
@@ -94,7 +97,6 @@ function LoginPage() {
                     7 7 0 1.565-.597 2.987-1.57 4.05" />
                 </svg>
               ) : (
-                // Show icon
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
                   viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round"
