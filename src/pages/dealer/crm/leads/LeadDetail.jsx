@@ -1,30 +1,22 @@
 // src/pages/dealer/crm/leads/LeadDetail.jsx
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { LeadConversionMeter } from './LeadConversionMeter';
+import { SmartFormField } from '@/components/shared/inputs/SmartFormField';
+import mockLeads from '@/data/mockLeads';
 
 export default function LeadDetail() {
   const { leadId } = useParams();
+  const navigate = useNavigate();
 
-  const [lead, setLead] = useState({
-    id: leadId,
-    name: 'John Doe',
-    status: 'New',
-    location: 'Haryana',
-    customerType: 'Farmer',
-    acreage: '12 acres',
-    source: 'Aerion Marketing',
-    ltv: '₹1.4L',
-    assignedTo: 'Sales Executive 3',
-    contact: '9876543210',
-    email: 'john@example.com',
-  });
-
-  const [interactions, setInteractions] = useState([
-    { id: 1, date: '2025-06-10', type: 'Phone Call', notes: 'Discussed drone package and financing.' },
-    { id: 2, date: '2025-06-12', type: 'WhatsApp', notes: 'Sent product brochure and demo link.' }
-  ]);
-
+  const [lead, setLead] = useState(null);
+  const [interactions, setInteractions] = useState([]);
   const [newInteraction, setNewInteraction] = useState({ type: 'Call', date: '', notes: '' });
+
+  useEffect(() => {
+    const found = mockLeads.find(l => l.id.toString() === leadId);
+    if (found) setLead(found);
+  }, [leadId]);
 
   const handleInteractionChange = (e) => {
     const { name, value } = e.target;
@@ -42,28 +34,51 @@ export default function LeadDetail() {
     setNewInteraction({ type: 'Call', date: '', notes: '' });
   };
 
+  const convertToCustomer = () => {
+    if (!lead) return;
+    // This would typically update backend
+    navigate(`/dealer/crm/customers/detail/${lead.id}`);
+  };
+
+  if (!lead) return <div className="p-6">Loading lead data...</div>;
+
   return (
     <div className="p-6 space-y-6">
       <h2 className="text-2xl font-bold">📇 Lead Detail - ID #{lead.id}</h2>
 
-      <div className="bg-white rounded shadow p-6 space-y-3">
-        <h3 className="text-lg font-semibold">👤 Lead Information</h3>
+      <div className="bg-white rounded shadow p-6 space-y-4">
+        <div className="flex justify-between items-center">
+          <h3 className="text-lg font-semibold">👤 Lead Information</h3>
+          <button
+            onClick={convertToCustomer}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Convert to Customer
+          </button>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <p><strong>Name:</strong> {lead.name}</p>
+          <p><strong>Name:</strong> {lead.firstName} {lead.lastName}</p>
+          <p><strong>Phone:</strong> {lead.mobile}</p>
           <p><strong>Status:</strong> {lead.status}</p>
-          <p><strong>Location:</strong> {lead.location}</p>
-          <p><strong>Customer Type:</strong> {lead.customerType}</p>
-          <p><strong>Acreage:</strong> {lead.acreage}</p>
-          <p><strong>Source:</strong> {lead.source}</p>
-          <p><strong>LTV:</strong> {lead.ltv}</p>
+          <p><strong>Stage:</strong> {lead.stage}</p>
+          <p><strong>Interest Level:</strong> {lead.interestLevel}</p>
           <p><strong>Assigned To:</strong> {lead.assignedTo}</p>
-          <p><strong>Phone:</strong> {lead.contact}</p>
-          <p><strong>Email:</strong> {lead.email}</p>
+          <p><strong>Product Interest:</strong> {lead.productInterest}</p>
+          <p><strong>Location:</strong> {lead.location}</p>
+          <p><strong>Language:</strong> {lead.language}</p>
+          <p><strong>Pin Code:</strong> {lead.pinCode}</p>
+          <p><strong>Customer Type:</strong> {lead.customerType}</p>
+          <p><strong>Acreage:</strong> {lead.acreage || '-'}</p>
+          <p><strong>Source:</strong> {lead.source}</p>
+          <div className="md:col-span-2">
+            <LeadConversionMeter stage={lead.stage} />
+          </div>
         </div>
       </div>
 
       <div className="bg-white rounded shadow p-6 space-y-4">
-        <h3 className="text-lg font-semibold">🕓 Interaction Timeline</h3>
+        <h3 className="text-lg font-semibold">📝 Interaction Timeline</h3>
         <form onSubmit={addInteraction} className="grid md:grid-cols-3 gap-4 items-end">
           <div>
             <label className="block text-sm font-medium">Type</label>
@@ -79,28 +94,22 @@ export default function LeadDetail() {
               <option>Meeting</option>
             </select>
           </div>
-          <div>
-            <label className="block text-sm font-medium">Date</label>
-            <input
-              type="date"
-              name="date"
-              value={newInteraction.date}
-              onChange={handleInteractionChange}
-              className="w-full border px-3 py-2 rounded"
-              required
-            />
-          </div>
-          <div className="col-span-2 md:col-span-1">
-            <label className="block text-sm font-medium">Notes</label>
-            <textarea
-              name="notes"
-              value={newInteraction.notes}
-              onChange={handleInteractionChange}
-              className="w-full border px-3 py-2 rounded"
-              rows={2}
-              required
-            />
-          </div>
+          <SmartFormField
+            name="date"
+            label="Date"
+            type="date"
+            value={newInteraction.date}
+            onChange={handleInteractionChange}
+            required
+          />
+          <SmartFormField
+            name="notes"
+            label="Notes"
+            multiline
+            value={newInteraction.notes}
+            onChange={handleInteractionChange}
+            required
+          />
           <button
             type="submit"
             className="md:col-span-3 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"

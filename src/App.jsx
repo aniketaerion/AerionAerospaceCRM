@@ -59,7 +59,7 @@ const PrivateRoute = ({ children }) => {
 // Layout
 import DealerPortalLayout from './layouts/DealerPortalLayout.jsx';
 
-// CRM Lead Module (full)
+// CRM Leads Module
 import CrmDashboard from './pages/dealer/crm/leads/CrmDashboard.jsx';
 import LeadsList from './pages/dealer/crm/leads/LeadsList.jsx';
 import CreateLead from './pages/dealer/crm/leads/CreateLead.jsx';
@@ -71,6 +71,21 @@ import Contacts from './pages/dealer/crm/leads/Contacts.jsx';
 import BulkAssignments from './pages/dealer/crm/leads/BulkAssignments.jsx';
 import LeadModuleTabs from './pages/dealer/crm/leads/Index.jsx';
 import LeadDetail from './pages/dealer/crm/leads/LeadDetail.jsx';
+import BulkImport from './pages/dealer/crm/leads/BulkImport.jsx';
+import LeadDisposition from './pages/dealer/crm/leads/LeadDisposition.jsx';
+import LeadsPanel from './pages/dealer/crm/leads/LeadsPanel.jsx';
+
+// Customer Module (Enterprise Grade)
+import CustomersList from './pages/dealer/crm/customers/CustomersList.jsx';
+import CustomerDetail from './pages/dealer/crm/customers/CustomerDetail.jsx';
+import CustomerAnalytics from './pages/dealer/crm/customers/CustomerAnalytics.jsx';
+import CustomerReferrals from './pages/dealer/crm/customers/CustomerReferrals.jsx';
+import CustomerEngagementScore from './pages/dealer/crm/customers/CustomerEngagementScore.jsx';
+import CustomerServicePanel from './pages/dealer/crm/customers/CustomerServicePanel.jsx';
+import CustomerCalendarView from './pages/dealer/crm/customers/CustomerCalendarView.jsx';
+import CustomerTimeline from './pages/dealer/crm/customers/CustomerTimeline.jsx';
+import CustomerProfileDownload from './pages/dealer/crm/customers/CustomerProfileDownload.jsx';
+import CustomerFilterBar from './pages/dealer/crm/customers/CustomerFilterBar.jsx';
 
 // Dealer System Dashboards
 import DealerDashboard from './pages/dealer/dashboard/index.jsx';
@@ -87,7 +102,6 @@ import LoginPage from './pages/login/LoginPage.jsx';
 
 const AppRoutes = () => {
   const location = useLocation();
-  const hideNavbar = ['/login'].includes(location.pathname);
 
   return (
     <Routes>
@@ -116,7 +130,22 @@ const AppRoutes = () => {
         <Route path="crm/leads/campaigns" element={<Campaigns />} />
         <Route path="crm/leads/contacts" element={<Contacts />} />
         <Route path="crm/leads/bulk-assignments" element={<BulkAssignments />} />
+        <Route path="crm/leads/bulk-import" element={<BulkImport />} />
+        <Route path="crm/leads/disposition" element={<LeadDisposition />} />
+        <Route path="crm/leads/panel" element={<LeadsPanel />} />
         <Route path="crm/leads/detail/:leadId" element={<LeadDetail />} />
+
+        {/* CRM Customers Module */}
+        <Route path="crm/customers/list" element={<CustomersList />} />
+        <Route path="crm/customers/detail/:customerId" element={<CustomerDetail />} />
+        <Route path="crm/customers/analytics" element={<CustomerAnalytics />} />
+        <Route path="crm/customers/referrals" element={<CustomerReferrals />} />
+        <Route path="crm/customers/engagement" element={<CustomerEngagementScore />} />
+        <Route path="crm/customers/service" element={<CustomerServicePanel />} />
+        <Route path="crm/customers/calendar" element={<CustomerCalendarView />} />
+        <Route path="crm/customers/timeline" element={<CustomerTimeline />} />
+        <Route path="crm/customers/profile-download" element={<CustomerProfileDownload />} />
+        <Route path="crm/customers/filter" element={<CustomerFilterBar />} />
 
         {/* Other Dealer Modules */}
         <Route path="inventory/dashboard" element={<InventoryDashboard />} />

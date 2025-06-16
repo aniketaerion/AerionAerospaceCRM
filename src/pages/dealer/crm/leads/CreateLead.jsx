@@ -1,123 +1,102 @@
-//src/pages/dealer/crm/leads/CreateLead.jsx //
-
-
+// src/pages/dealer/crm/leads/CreateLead.jsx
 import React, { useState } from 'react';
+import { PhoneInputVerified } from '@/components/shared/inputs/PhoneInputVerified';
+import { SmartFormField } from '@/components/shared/inputs/SmartFormField';
+import { useNavigate } from 'react-router-dom';
+import { generateUniqueId } from '@/lib/utils/uniqueId';
 
 export default function CreateLead() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
-    name: '',
-    contact: '',
-    type: 'Farmer',
-    location: '',
-    status: 'New',
-    assignedTo: ''
+    firstName: '',
+    lastName: '',
+    mobile: '',
+    language: '',
+    pinCode: '',
+    productInterest: '',
+    interestLevel: 'Warm',
+    stage: 'Call',
+    disposition: '',
+    assignedTo: '',
+    notes: '',
+    verified: false,
   });
 
-  const handleChange = e => {
+  const stageOptions = [
+    { label: 'Call', value: 'Call' },
+    { label: 'Demo Scheduled', value: 'Demo' },
+    { label: 'Quotation Shared', value: 'Quotation' },
+    { label: 'Negotiation', value: 'Negotiation' },
+    { label: 'Closed - Won', value: 'ClosedWon' },
+    { label: 'Closed - Lost', value: 'ClosedLost' }
+  ];
+
+  const interestLevels = ['Hot', 'Warm', 'Cold'];
+
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = e => {
+  const handlePhoneVerified = (value) => {
+    setFormData(prev => ({ ...prev, mobile: value, verified: true }));
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Lead Submitted:', formData);
-    alert('Lead created successfully!');
-    // Reset form
-    setFormData({
-      name: '',
-      contact: '',
-      type: 'Farmer',
-      location: '',
-      status: 'New',
-      assignedTo: ''
-    });
+    if (!formData.verified || !formData.firstName || !formData.lastName || !formData.language || !formData.pinCode || !formData.mobile || !formData.productInterest) {
+      alert('Please fill all required fields and verify mobile.');
+      return;
+    }
+
+    const newLead = {
+      ...formData,
+      id: generateUniqueId('lead'),
+      createdAt: new Date().toISOString(),
+      isCustomer: false,
+    };
+
+    console.log('Lead Created:', newLead);
+    // Simulate saving to leads list
+    navigate('/dealer/crm/leads');
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto bg-white rounded shadow">
-      <h2 className="text-2xl font-bold mb-4">Create New Lead</h2>
+    <div className="p-6 max-w-3xl mx-auto space-y-6">
+      <h2 className="text-2xl font-bold">🧍 Create New Lead</h2>
+
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium">Name</label>
-          <input
-            type="text"
-            name="name"
-            required
-            value={formData.name}
-            onChange={handleChange}
-            className="mt-1 block w-full border rounded px-3 py-2"
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <SmartFormField name="firstName" label="First Name *" value={formData.firstName} onChange={handleChange} required />
+          <SmartFormField name="lastName" label="Last Name *" value={formData.lastName} onChange={handleChange} required />
+          <PhoneInputVerified value={formData.mobile} onVerify={handlePhoneVerified} required />
+          <SmartFormField name="language" label="Language *" value={formData.language} onChange={handleChange} required />
+          <SmartFormField name="pinCode" label="Pin Code *" value={formData.pinCode} onChange={handleChange} required />
+          <SmartFormField name="productInterest" label="Product Interest *" value={formData.productInterest} onChange={handleChange} required />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium">Contact Number</label>
-          <input
-            type="text"
-            name="contact"
-            required
-            value={formData.contact}
-            onChange={handleChange}
-            className="mt-1 block w-full border rounded px-3 py-2"
-          />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium">Interest Level *</label>
+            <select name="interestLevel" value={formData.interestLevel} onChange={handleChange} className="w-full border rounded px-3 py-2">
+              {interestLevels.map(level => <option key={level}>{level}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium">Stage *</label>
+            <select name="stage" value={formData.stage} onChange={handleChange} className="w-full border rounded px-3 py-2">
+              {stageOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+            </select>
+          </div>
+          <SmartFormField name="assignedTo" label="Assigned To *" value={formData.assignedTo} onChange={handleChange} required />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium">Type</label>
-          <select
-            name="type"
-            value={formData.type}
-            onChange={handleChange}
-            className="mt-1 block w-full border rounded px-3 py-2"
-          >
-            <option>Farmer</option>
-            <option>FPO</option>
-            <option>Institution</option>
-          </select>
-        </div>
+        <SmartFormField name="disposition" label="Call Disposition" value={formData.disposition} onChange={handleChange} />
+        <SmartFormField name="notes" label="Notes" value={formData.notes} onChange={handleChange} multiline />
 
-        <div>
-          <label className="block text-sm font-medium">Location</label>
-          <input
-            type="text"
-            name="location"
-            required
-            value={formData.location}
-            onChange={handleChange}
-            className="mt-1 block w-full border rounded px-3 py-2"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium">Status</label>
-          <select
-            name="status"
-            value={formData.status}
-            onChange={handleChange}
-            className="mt-1 block w-full border rounded px-3 py-2"
-          >
-            <option>New</option>
-            <option>In Progress</option>
-            <option>Converted</option>
-            <option>Not Interested</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium">Assigned To</label>
-          <input
-            type="text"
-            name="assignedTo"
-            value={formData.assignedTo}
-            onChange={handleChange}
-            className="mt-1 block w-full border rounded px-3 py-2"
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
-        >
-          Submit Lead
+        <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+          ➕ Create Lead
         </button>
       </form>
     </div>
