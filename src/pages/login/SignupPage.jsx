@@ -1,8 +1,8 @@
 // src/pages/login/SignupPage.jsx
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import AuthForm from '@/components/AuthForm'; // Import the enhanced AuthForm
-import supabase from '@/supabaseClient'; // Import your Supabase client
+import AuthForm from '@/components/AuthForm'; // CORRECTED IMPORT PATH
+import supabase from '@/supabaseClient';
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -28,27 +28,17 @@ const SignupPage = () => {
     }
 
     try {
-      // Supabase signup with email and password
       const { data, error } = await supabase.auth.signUp({
         email: email,
         password: password,
-        // You can add more user metadata here if needed
-        // options: {
-        //   data: {
-        //     full_name: formData.fullName,
-        //   }
-        // }
       });
 
       if (error) {
         setErrorMessage(error.message);
       } else if (data?.user) {
-        // User successfully signed up
-        // Supabase often sends a confirmation email. Inform the user.
         console.log('Signup successful! Please check your email to confirm your account.');
-        setErrorMessage('Signup successful! Please check your email to confirm your account.'); // Display success message
-        // Redirect to login page after a short delay
-        setTimeout(() => navigate('/login'), 3000); 
+        setErrorMessage('Signup successful! Please check your email to confirm your account.');
+        setTimeout(() => navigate('/login'), 3000);
       } else {
         setErrorMessage('An unexpected error occurred during signup.');
       }
@@ -62,7 +52,6 @@ const SignupPage = () => {
 
   return (
     <AuthForm onSubmit={handleSignup} type="Signup" errorMessage={errorMessage} isLoading={isLoading}>
-      {/* Fields for Signup Form */}
       {(handleChange, formData) => (
         <>
           <label className="block text-neutral-dark text-sm font-medium mb-1">

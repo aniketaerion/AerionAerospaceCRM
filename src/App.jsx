@@ -119,6 +119,7 @@ import DealerProfile from './pages/dealer/profile/index.jsx';
 
 // Auth Pages
 import LoginPage from './pages/login/LoginPage.jsx';
+import SignupPage from '@/pages/login/SignupPage.jsx'; // Corrected import path
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -126,6 +127,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
 
       <Route
         path="/dealer/*"
@@ -136,16 +138,15 @@ const AppRoutes = () => {
         }
       >
         {/* Dealer Dashboards */}
-        <Route index element={<Navigate to="dashboard" replace />} /> {/* Redirect /dealer to /dealer/dashboard */}
+        <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<DealerDashboard />} />
         <Route path="sales/dashboard" element={<SalesDashboard />} />
         
-        {/* CRM Module Parent Route - Ensure explicit paths */}
-        <Route path="crm" element={<CrmDashboard />} /> {/* Main CRM Dashboard route */}
-        <Route path="crm/dashboard" element={<Navigate to="/dealer/crm" replace />} /> {/* Redirect /dealer/crm/dashboard to /dealer/crm */}
+        {/* CRM Module Parent Route */}
+        <Route path="crm" element={<CrmDashboard />} /> 
 
         {/* CRM Leads Sub-Module */}
-        <Route path="crm/leads" element={<LeadModuleTabs />} /> {/* Main Leads page, perhaps tabs or list */}
+        <Route path="crm/leads" element={<LeadModuleTabs />} />
         <Route path="crm/leads/list" element={<LeadsList />} />
         <Route path="crm/leads/create" element={<CreateLead />} />
         <Route path="crm/leads/analytics" element={<LeadAnalytics />} />
