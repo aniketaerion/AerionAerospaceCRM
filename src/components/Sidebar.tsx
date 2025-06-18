@@ -13,7 +13,7 @@ const menu = [
   { name: 'Profile', path: '/dealer/profile', icon: '⚙️' }
 ];
 
-export function Sidebar() {
+function Sidebar() {
   return (
     <aside className="w-64 bg-white border-r">
       <nav className="flex flex-col gap-2 p-4">
@@ -26,3 +26,5 @@ export function Sidebar() {
     </aside>
   );
 }
+
+export default Sidebar;

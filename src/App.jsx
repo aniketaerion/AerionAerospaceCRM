@@ -76,7 +76,7 @@ import LeadDisposition from './pages/dealer/crm/leads/LeadDisposition.jsx';
 import LeadsPanel from './pages/dealer/crm/leads/LeadsPanel.jsx';
 
 // Customer Module (Enterprise Grade)
-import CustomersList from './pages/dealer/crm/customers/CustomersList.jsx';
+import CustomersPanel from './pages/dealer/crm/customers/CustomersPanel.jsx';
 import CustomerDetail from './pages/dealer/crm/customers/CustomerDetail.jsx';
 import CustomerAnalytics from './pages/dealer/crm/customers/CustomerAnalytics.jsx';
 import CustomerReferrals from './pages/dealer/crm/customers/CustomerReferrals.jsx';
@@ -136,7 +136,7 @@ const AppRoutes = () => {
         <Route path="crm/leads/detail/:leadId" element={<LeadDetail />} />
 
         {/* CRM Customers Module */}
-        <Route path="crm/customers/list" element={<CustomersList />} />
+        <Route path="crm/customers/panel" element={<CustomersPanel />} />
         <Route path="crm/customers/detail/:customerId" element={<CustomerDetail />} />
         <Route path="crm/customers/analytics" element={<CustomerAnalytics />} />
         <Route path="crm/customers/referrals" element={<CustomerReferrals />} />

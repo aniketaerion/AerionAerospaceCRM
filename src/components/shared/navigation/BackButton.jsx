@@ -4,7 +4,7 @@ import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 
-export default function BackButton({ to = null, label = 'Back', className = '' }) {
+export function BackButton({ to = null, label = 'Back', className = '' }) {
   const navigate = useNavigate();
 
   const handleClick = () => {

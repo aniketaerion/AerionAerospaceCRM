@@ -1,7 +1,7 @@
-// src/pages/dealer/crm/leads/LeadsPanel.jsx
+// ✅ src/pages/dealer/crm/leads/LeadsPanel.jsx
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Tabs } from '@/components/shared/navigation/Tabs';
+import {Tabs} from '@/components/shared/navigation/Tabs';
 import LeadsList from './LeadsList';
 import CreateLead from './CreateLead';
 import BulkImport from './BulkImport';

@@ -1,8 +1,8 @@
-// src/components/shared/navigation/Tabs.jsx
+// ✅ src/components/shared/navigation/Tabs.jsx
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-export default function Tabs({ tabs, basePath }) {
+export function Tabs({ tabs, basePath }) {
   return (
     <div className="flex gap-6 border-b mb-6">
       {tabs.map(({ label, path }) => (

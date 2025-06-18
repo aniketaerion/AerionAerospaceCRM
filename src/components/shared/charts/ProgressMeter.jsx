@@ -1,7 +1,7 @@
 // src/components/shared/charts/ProgressMeter.jsx
 import React from 'react';
 
-export default function ProgressMeter({ value = 0, label = '', color = 'primary' }) {
+export function ProgressMeter({ value = 0, label = '', color = 'primary' }) {
   const getColor = () => {
     switch (color) {
       case 'accent': return 'bg-accent';

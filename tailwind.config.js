@@ -5,13 +5,6 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
-  },
-  plugins: [],
-}
-// tailwind.config.js
-module.exports = {
-  theme: {
     extend: {
       colors: {
         primary: '#0047AB',    // Aerion Blue
@@ -21,4 +14,5 @@ module.exports = {
       },
     },
   },
+  plugins: [],
 };

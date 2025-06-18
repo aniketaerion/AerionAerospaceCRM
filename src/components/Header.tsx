@@ -1,7 +1,7 @@
 // src/components/Header.tsx
 import { useDealer } from '@/contexts/DealerContext';
 
-export function Header() {
+function Header() {
   const { dealerName, dealerLogo } = useDealer();
   return (
     <header className="bg-white border-b px-4 py-2 flex justify-between items-center shadow">
@@ -17,3 +17,5 @@ export function Header() {
     </header>
   );
 }
+
+export default Header;

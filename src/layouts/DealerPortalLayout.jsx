@@ -1,6 +1,5 @@
-// src/layouts/DealerPortalLayout.jsx
-import { Sidebar } from '@/components/Sidebar';
-import { Header } from '@/components/Header';
+import  Sidebar  from '@/components/Sidebar'; // only if Sidebar is a named export
+import Header from '@/components/Header';       // <-- changed to default import
 import Footer from '@/components/Footer';
 import { DealerContext } from '@/contexts/DealerContext';
 import { Outlet } from 'react-router-dom'; // Required for nested routes

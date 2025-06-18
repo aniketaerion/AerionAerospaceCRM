@@ -1,12 +1,13 @@
 // src/pages/dealer/crm/customers/CustomersPanel.jsx
+
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { Tabs } from '@/components/shared/navigation/Tabs';
 import CustomersList from './CustomersList';
 import CustomerDetail from './CustomerDetail';
 import PurchaseHistory from './PurchaseHistory';
 import CustomerAutomation from './CustomerAutomation';
-import Referrals from './Referrals';
+import Referrals from './CustomerReferrals';
 import Promotions from './Promotions';
 import { BackButton } from '@/components/shared/navigation/BackButton';
 
@@ -28,7 +29,7 @@ export default function CustomersPanel() {
     { key: 'profile', label: '📋 Customer Detail' },
   ];
 
-  const renderTab = () => {
+  const renderTabContent = () => {
     switch (activeTab) {
       case 'list': return <CustomersList />;
       case 'history': return <PurchaseHistory />;
@@ -52,14 +53,15 @@ export default function CustomersPanel() {
       <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
 
       <div className="bg-white p-4 shadow rounded-lg">
-        {renderTab()}
+        {renderTabContent()}
       </div>
 
       <button
         onClick={() => setActiveTab('profile')}
-        className="fixed bottom-6 right-6 bg-green-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-green-700"
+        className="fixed bottom-6 right-6 bg-green-600 text-white px-5 py-2 rounded-full shadow-lg hover:bg-green-700 transition"
       >
-        📋 New Customer</button>
+        ➕ New Customer
+      </button>
     </div>
   );
 }

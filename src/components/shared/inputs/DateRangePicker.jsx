@@ -1,7 +1,7 @@
 // src/components/shared/inputs/DateRangePicker.jsx
 import React, { useState } from 'react';
 
-export default function DateRangePicker({ onChange, label = 'Select Date Range' }) {
+export function DateRangePicker({ onChange, label = 'Select Date Range' }) {
   const [range, setRange] = useState({ from: '', to: '' });
 
   const handleChange = (e) => {

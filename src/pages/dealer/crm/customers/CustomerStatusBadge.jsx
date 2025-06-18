@@ -11,7 +11,7 @@ const badgeStyles = {
   Both: 'bg-purple-100 text-purple-700'
 };
 
-export function CustomerStatusBadge({ status }) {
+export default function CustomerStatusBadge({ status }) {
   if (!status) return null;
   return (
     <span className={`px-2 py-0.5 text-xs rounded font-medium ${badgeStyles[status] || 'bg-gray-100 text-gray-700'}`}>

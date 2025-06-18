@@ -1,0 +1,11 @@
+//C:\Users\tride\crm-app\tsconfig.node.json
+{
+  "compilerOptions": {
+    "composite": true,
+    "skipLibCheck": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["vite.config.js"] // Note: if your vite config is .ts, use "vite.config.ts"
+}

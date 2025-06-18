@@ -1,9 +1,47 @@
 // src/pages/dealer/crm/leads/LeadDetail.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { LeadConversionMeter } from './LeadConversionMeter';
+import LeadConversionMeter from '@/components/shared/widgets/LeadConversionMeter.jsx';
 import { SmartFormField } from '@/components/shared/inputs/SmartFormField';
-import mockLeads from '@/data/mockLeads';
+
+// Inline mock data instead of importing mockLeads
+const mockLeads = [
+  {
+    id: 1,
+    firstName: 'John',
+    lastName: 'Doe',
+    mobile: '1234567890',
+    status: 'New',
+    stage: 'Contacted',
+    interestLevel: 'High',
+    assignedTo: 'Agent A',
+    productInterest: 'Product X',
+    location: 'City A',
+    language: 'English',
+    pinCode: '12345',
+    customerType: 'Individual',
+    acreage: null,
+    source: 'Website',
+  },
+  {
+    id: 2,
+    firstName: 'Jane',
+    lastName: 'Smith',
+    mobile: '9876543210',
+    status: 'In Progress',
+    stage: 'Qualified',
+    interestLevel: 'Medium',
+    assignedTo: 'Agent B',
+    productInterest: 'Product Y',
+    location: 'City B',
+    language: 'Spanish',
+    pinCode: '54321',
+    customerType: 'Business',
+    acreage: 5,
+    source: 'Referral',
+  },
+  // Add more mock leads if needed
+];
 
 export default function LeadDetail() {
   const { leadId } = useParams();
@@ -16,6 +54,7 @@ export default function LeadDetail() {
   useEffect(() => {
     const found = mockLeads.find(l => l.id.toString() === leadId);
     if (found) setLead(found);
+    else setLead(null);
   }, [leadId]);
 
   const handleInteractionChange = (e) => {
