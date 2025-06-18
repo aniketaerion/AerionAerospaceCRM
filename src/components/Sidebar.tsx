@@ -1,6 +1,6 @@
 // src/components/Sidebar.tsx
-import React, { useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom'; // Import useLocation
+import React, { useState, useEffect } from 'react'; // Import useEffect
+import { NavLink, useLocation } from 'react-router-dom';
 import {
   ChartBarIcon,
   ClipboardDocumentListIcon,
@@ -19,7 +19,6 @@ interface NavItem {
   name: string;
   icon: React.ElementType;
   path: string;
-  // Optional: for nested items like CRM
   children?: NavItem[];
 }
 
@@ -28,7 +27,7 @@ const navItems: NavItem[] = [
   {
     name: 'CRM', // Parent CRM item
     icon: ClipboardDocumentListIcon,
-    path: '/dealer/crm/dashboard', // Main CRM dashboard, or could be /dealer/crm to auto-redirect to leads
+    path: '/dealer/crm', // Points to the main CRM dashboard
     children: [
       { name: 'Leads', icon: ClipboardDocumentListIcon, path: '/dealer/crm/leads' },
       { name: 'Customers', icon: UsersIcon, path: '/dealer/crm/customers/panel' },
@@ -49,26 +48,28 @@ interface SidebarProps {
 }
 
 function Sidebar({ isOpen, onClose }: SidebarProps) {
+  const location = useLocation();
   // State to manage expansion of nested menu items (like CRM)
   const [openCrmSubmenu, setOpenCrmSubmenu] = useState(false);
-  const location = useLocation(); // Hook to get current location
 
-  // Determine if a parent CRM link is active (any child is active)
-  // `match` parameter is unused here, so explicitly type as `any` or `null` based on usage
-  const isCrmActive = (match: any, currentLocation: typeof location) => { // Type `match` as any, `currentLocation` as Location object
-    return navItems.find(item => item.name === 'CRM')?.children?.some(child => currentLocation.pathname.startsWith(child.path));
-  };
+  // UseEffect to open CRM submenu if current path is within CRM
+  useEffect(() => {
+    const isCrmPathActive = location.pathname.startsWith('/dealer/crm');
+    setOpenCrmSubmenu(isCrmPathActive);
+  }, [location.pathname]);
 
-  // Effect to close mobile sidebar and reset submenu state when route changes
-  // This ensures the sidebar closes after navigation on mobile, and CRM submenu reflects current path
-  React.useEffect(() => {
-    // Check if the current path starts with any CRM child path
-    const isAnyCrmChildActive = navItems.find(item => item.name === 'CRM')?.children?.some(child => location.pathname.startsWith(child.path));
-    setOpenCrmSubmenu(isAnyCrmChildActive || false); // Open CRM submenu if any child is active
-    if (isOpen) {
-        onClose(); // Close the mobile sidebar on route change
+  // Determine if a parent CRM link is active (any child is active, or parent itself)
+  const isCrmParentActive = (currentLocation: typeof location): boolean => {
+    const crmItem = navItems.find(item => item.name === 'CRM');
+    if (!crmItem) return false;
+    
+    // Check if the current path starts with the CRM parent path
+    if (currentLocation.pathname.startsWith(crmItem.path)) {
+      return true;
     }
-  }, [location.pathname, isOpen, onClose]);
+    // Check if any CRM child path is active
+    return crmItem.children?.some(child => currentLocation.pathname.startsWith(child.path)) || false;
+  };
 
 
   return (
@@ -114,20 +115,22 @@ function Sidebar({ isOpen, onClose }: SidebarProps) {
                 <div>
                   <NavLink
                     to={item.path}
+                    // Use a functional update for setOpenCrmSubmenu
                     onClick={(e) => {
-                      // Prevent navigation on click if it's just for opening submenu
-                      // If you want to navigate AND open, remove e.preventDefault()
-                      // Only prevent if path is undefined or if it's a parent toggle click
-                      if (item.path === '/dealer/crm/dashboard' || !item.path) { // CRM parent will navigate or toggle
-                          e.preventDefault();
-                          setOpenCrmSubmenu(!openCrmSubmenu);
-                      } else {
-                          onClose(); // Close on mobile if actually navigating
-                      }
+                        // Only prevent default if the item itself is a folder toggle (has children and is not a direct page)
+                        if (item.children && item.path) { // Assumes items with children have a path, and it's for navigation
+                            // We explicitly navigate to the path provided, but also toggle submenu
+                            // If you want to ONLY toggle and NOT navigate, uncomment e.preventDefault()
+                            // e.preventDefault();
+                            setOpenCrmSubmenu(prev => !prev);
+                            onClose(); // Close mobile sidebar after navigating or toggling
+                        } else {
+                            onClose(); // Close mobile sidebar if it's a simple nav click
+                        }
                     }}
                     className={({ isActive }) =>
                       `flex items-center justify-between p-3 rounded-lg transition-colors duration-200
-                      ${isActive || isCrmActive(null, location) // Highlight if parent or any child is active
+                      ${isActive || isCrmParentActive(location) // Highlight if parent itself is active or any child is active
                         ? 'bg-aerion-blue text-white shadow-md'
                         : 'text-neutral-dark hover:bg-aerion-yellow-dark hover:text-aerion-blue'
                       }`
@@ -139,7 +142,7 @@ function Sidebar({ isOpen, onClose }: SidebarProps) {
                     </div>
                     {/* Arrow icon for submenu */}
                     <svg
-                      className={`h-5 w-5 transform ${openCrmSubmenu || isCrmActive(null, location) ? 'rotate-90' : ''} transition-transform`}
+                      className={`h-5 w-5 transform ${openCrmSubmenu ? 'rotate-90' : ''} transition-transform`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -149,7 +152,7 @@ function Sidebar({ isOpen, onClose }: SidebarProps) {
                     </svg>
                   </NavLink>
                   {/* Nested children (submenu) */}
-                  {(openCrmSubmenu || isCrmActive(null, location)) && ( // Show if submenu is open or parent is active
+                  {openCrmSubmenu && ( // Show only if submenu is explicitly open
                     <div className="ml-4 mt-1 space-y-1">
                       {item.children.map((child) => (
                         <NavLink

@@ -80,7 +80,7 @@ const PrivateRoute = ({ children }) => {
 import DealerPortalLayout from './layouts/DealerPortalLayout.jsx';
 
 // CRM Leads Module
-import CrmDashboard from './pages/dealer/crm/leads/CrmDashboard.jsx'; // This will become the main CRM Dashboard
+import CrmDashboard from './pages/dealer/crm/leads/CrmDashboard.jsx'; // This will be the main CRM Dashboard
 import LeadsList from './pages/dealer/crm/leads/LeadsList.jsx';
 import CreateLead from './pages/dealer/crm/leads/CreateLead.jsx';
 import LeadAnalytics from './pages/dealer/crm/leads/LeadPerformance.jsx';
@@ -115,7 +115,7 @@ import FinanceDashboard from './pages/dealer/finance/dashboard/index.jsx';
 import ServiceDashboard from './pages/dealer/service/dashboard/index.jsx';
 import MarketingDashboard from './pages/dealer/marketing/dashboard/index.jsx';
 import ReportsDashboard from './pages/dealer/reports/dashboard/index.jsx';
-import DealerProfile from './pages/dealer/profile/index.jsx'; // This will house the Logout functionality
+import DealerProfile from './pages/dealer/profile/index.jsx';
 
 // Auth Pages
 import LoginPage from './pages/login/LoginPage.jsx';
@@ -136,16 +136,16 @@ const AppRoutes = () => {
         }
       >
         {/* Dealer Dashboards */}
+        <Route index element={<Navigate to="dashboard" replace />} /> {/* Redirect /dealer to /dealer/dashboard */}
         <Route path="dashboard" element={<DealerDashboard />} />
         <Route path="sales/dashboard" element={<SalesDashboard />} />
         
-        {/* CRM Module Parent Route */}
-        {/* The CRM dashboard or main CRM entry point */}
-        <Route path="crm/dashboard" element={<CrmDashboard />} />
-        <Route path="crm" element={<Navigate to="crm/dashboard" replace />} /> {/* Redirect /dealer/crm to crm dashboard */}
+        {/* CRM Module Parent Route - Ensure explicit paths */}
+        <Route path="crm" element={<CrmDashboard />} /> {/* Main CRM Dashboard route */}
+        <Route path="crm/dashboard" element={<Navigate to="/dealer/crm" replace />} /> {/* Redirect /dealer/crm/dashboard to /dealer/crm */}
 
         {/* CRM Leads Sub-Module */}
-        <Route path="crm/leads" element={<LeadModuleTabs />} /> {/* Could be LeadsList or LeadModuleTabs */}
+        <Route path="crm/leads" element={<LeadModuleTabs />} /> {/* Main Leads page, perhaps tabs or list */}
         <Route path="crm/leads/list" element={<LeadsList />} />
         <Route path="crm/leads/create" element={<CreateLead />} />
         <Route path="crm/leads/analytics" element={<LeadAnalytics />} />
@@ -177,7 +177,7 @@ const AppRoutes = () => {
         <Route path="service/dashboard" element={<ServiceDashboard />} />
         <Route path="marketing/dashboard" element={<MarketingDashboard />} />
         <Route path="reports/dashboard" element={<ReportsDashboard />} />
-        <Route path="profile" element={<DealerProfile />} /> {/* Logout could be within DealerProfile */}
+        <Route path="profile" element={<DealerProfile />} />
 
         {/* Fallback for /dealer/* routes */}
         <Route path="*" element={<Navigate to="dashboard" replace />} />
