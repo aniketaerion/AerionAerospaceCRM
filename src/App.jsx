@@ -9,8 +9,8 @@ import {
 } from 'react-router-dom';
 import supabase from '@/supabaseClient';
 
-// Auth Context (unchanged)
-const AuthContext = createContext(null); // Initialize with null
+// Auth Context
+const AuthContext = createContext(null);
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -20,14 +20,13 @@ export const useAuth = () => {
 };
 
 const AuthProvider = ({ children }) => {
-  const [authToken, setAuthToken] = useState(null); // Removed <string | null> type annotation
-  const [loadingAuth, setLoadingAuth] = useState(true); // New loading state for auth
+  const [authToken, setAuthToken] = useState(null);
+  const [loadingAuth, setLoadingAuth] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     setAuthToken(token);
 
-    // Supabase auth listener
     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.access_token) {
         localStorage.setItem('authToken', session.access_token);
@@ -36,10 +35,9 @@ const AuthProvider = ({ children }) => {
         localStorage.removeItem('authToken');
         setAuthToken(null);
       }
-      setLoadingAuth(false); // Auth check completed
+      setLoadingAuth(false);
     });
 
-    // Cleanup listener
     return () => {
       if (authListener?.unsubscribe) {
         authListener.unsubscribe();
@@ -47,7 +45,7 @@ const AuthProvider = ({ children }) => {
     };
   }, []);
 
-  const login = (token) => { // Removed : string type annotation
+  const login = (token) => {
     localStorage.setItem('authToken', token);
     setAuthToken(token);
   };
@@ -58,7 +56,6 @@ const AuthProvider = ({ children }) => {
     setAuthToken(null);
   };
 
-  // If still loading auth state, show a loading indicator or null
   if (loadingAuth) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-neutral-light">
@@ -79,11 +76,11 @@ const PrivateRoute = ({ children }) => {
   return authToken ? children : <Navigate to="/login" replace />;
 };
 
-// Layout - Import from correct path
+// Layout
 import DealerPortalLayout from './layouts/DealerPortalLayout.jsx';
 
-// CRM Leads Module (unchanged imports)
-import CrmDashboard from './pages/dealer/crm/leads/CrmDashboard.jsx';
+// CRM Leads Module
+import CrmDashboard from './pages/dealer/crm/leads/CrmDashboard.jsx'; // This will become the main CRM Dashboard
 import LeadsList from './pages/dealer/crm/leads/LeadsList.jsx';
 import CreateLead from './pages/dealer/crm/leads/CreateLead.jsx';
 import LeadAnalytics from './pages/dealer/crm/leads/LeadPerformance.jsx';
@@ -98,7 +95,7 @@ import BulkImport from './pages/dealer/crm/leads/BulkImport.jsx';
 import LeadDisposition from './pages/dealer/crm/leads/LeadDisposition.jsx';
 import LeadsPanel from './pages/dealer/crm/leads/LeadsPanel.jsx';
 
-// Customer Module (Enterprise Grade) (unchanged imports)
+// CRM Customers Module
 import CustomersPanel from './pages/dealer/crm/customers/CustomersPanel.jsx';
 import CustomerDetail from './pages/dealer/crm/customers/CustomerDetail.jsx';
 import CustomerAnalytics from './pages/dealer/crm/customers/CustomerAnalytics.jsx';
@@ -110,7 +107,7 @@ import CustomerTimeline from './pages/dealer/crm/customers/CustomerTimeline.jsx'
 import CustomerProfileDownload from './pages/dealer/crm/customers/CustomerProfileDownload.jsx';
 import CustomerFilterBar from './pages/dealer/crm/customers/CustomerFilterBar.jsx';
 
-// Dealer System Dashboards (unchanged imports)
+// Dealer System Dashboards
 import DealerDashboard from './pages/dealer/dashboard/index.jsx';
 import SalesDashboard from './pages/dealer/sales/dashboard/index.jsx';
 import InventoryDashboard from './pages/dealer/inventory/dashboard/index.jsx';
@@ -118,9 +115,9 @@ import FinanceDashboard from './pages/dealer/finance/dashboard/index.jsx';
 import ServiceDashboard from './pages/dealer/service/dashboard/index.jsx';
 import MarketingDashboard from './pages/dealer/marketing/dashboard/index.jsx';
 import ReportsDashboard from './pages/dealer/reports/dashboard/index.jsx';
-import DealerProfile from './pages/dealer/profile/index.jsx';
+import DealerProfile from './pages/dealer/profile/index.jsx'; // This will house the Logout functionality
 
-// Auth Pages (unchanged imports)
+// Auth Pages
 import LoginPage from './pages/login/LoginPage.jsx';
 
 const AppRoutes = () => {
@@ -134,7 +131,6 @@ const AppRoutes = () => {
         path="/dealer/*"
         element={
           <PrivateRoute>
-            {/* DealerPortalLayout handles its own dealerName via Context */}
             <DealerPortalLayout />
           </PrivateRoute>
         }
@@ -142,10 +138,14 @@ const AppRoutes = () => {
         {/* Dealer Dashboards */}
         <Route path="dashboard" element={<DealerDashboard />} />
         <Route path="sales/dashboard" element={<SalesDashboard />} />
+        
+        {/* CRM Module Parent Route */}
+        {/* The CRM dashboard or main CRM entry point */}
         <Route path="crm/dashboard" element={<CrmDashboard />} />
+        <Route path="crm" element={<Navigate to="crm/dashboard" replace />} /> {/* Redirect /dealer/crm to crm dashboard */}
 
-        {/* CRM Leads Module */}
-        <Route path="crm/leads" element={<LeadModuleTabs />} />
+        {/* CRM Leads Sub-Module */}
+        <Route path="crm/leads" element={<LeadModuleTabs />} /> {/* Could be LeadsList or LeadModuleTabs */}
         <Route path="crm/leads/list" element={<LeadsList />} />
         <Route path="crm/leads/create" element={<CreateLead />} />
         <Route path="crm/leads/analytics" element={<LeadAnalytics />} />
@@ -159,7 +159,7 @@ const AppRoutes = () => {
         <Route path="crm/leads/panel" element={<LeadsPanel />} />
         <Route path="crm/leads/detail/:leadId" element={<LeadDetail />} />
 
-        {/* CRM Customers Module */}
+        {/* CRM Customers Sub-Module */}
         <Route path="crm/customers/panel" element={<CustomersPanel />} />
         <Route path="crm/customers/detail/:customerId" element={<CustomerDetail />} />
         <Route path="crm/customers/analytics" element={<CustomerAnalytics />} />
@@ -177,9 +177,9 @@ const AppRoutes = () => {
         <Route path="service/dashboard" element={<ServiceDashboard />} />
         <Route path="marketing/dashboard" element={<MarketingDashboard />} />
         <Route path="reports/dashboard" element={<ReportsDashboard />} />
-        <Route path="profile" element={<DealerProfile />} />
+        <Route path="profile" element={<DealerProfile />} /> {/* Logout could be within DealerProfile */}
 
-        {/* Fallback */}
+        {/* Fallback for /dealer/* routes */}
         <Route path="*" element={<Navigate to="dashboard" replace />} />
       </Route>
 
