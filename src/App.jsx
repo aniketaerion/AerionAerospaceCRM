@@ -9,17 +9,25 @@ import {
 } from 'react-router-dom';
 import supabase from '@/supabaseClient';
 
-// Auth Context
-const AuthContext = createContext();
-export const useAuth = () => useContext(AuthContext);
+// Auth Context (unchanged)
+const AuthContext = createContext(null); // Initialize with null
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
 
 const AuthProvider = ({ children }) => {
-  const [authToken, setAuthToken] = useState(null);
+  const [authToken, setAuthToken] = useState(null); // Removed <string | null> type annotation
+  const [loadingAuth, setLoadingAuth] = useState(true); // New loading state for auth
 
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     setAuthToken(token);
 
+    // Supabase auth listener
     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.access_token) {
         localStorage.setItem('authToken', session.access_token);
@@ -28,12 +36,18 @@ const AuthProvider = ({ children }) => {
         localStorage.removeItem('authToken');
         setAuthToken(null);
       }
+      setLoadingAuth(false); // Auth check completed
     });
 
-    return () => authListener?.unsubscribe();
+    // Cleanup listener
+    return () => {
+      if (authListener?.unsubscribe) {
+        authListener.unsubscribe();
+      }
+    };
   }, []);
 
-  const login = (token) => {
+  const login = (token) => { // Removed : string type annotation
     localStorage.setItem('authToken', token);
     setAuthToken(token);
   };
@@ -43,6 +57,15 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem('authToken');
     setAuthToken(null);
   };
+
+  // If still loading auth state, show a loading indicator or null
+  if (loadingAuth) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-neutral-light">
+        <div className="text-aerion-blue text-2xl font-semibold">Loading Application...</div>
+      </div>
+    );
+  }
 
   return (
     <AuthContext.Provider value={{ authToken, login, logout }}>
@@ -56,10 +79,10 @@ const PrivateRoute = ({ children }) => {
   return authToken ? children : <Navigate to="/login" replace />;
 };
 
-// Layout
+// Layout - Import from correct path
 import DealerPortalLayout from './layouts/DealerPortalLayout.jsx';
 
-// CRM Leads Module
+// CRM Leads Module (unchanged imports)
 import CrmDashboard from './pages/dealer/crm/leads/CrmDashboard.jsx';
 import LeadsList from './pages/dealer/crm/leads/LeadsList.jsx';
 import CreateLead from './pages/dealer/crm/leads/CreateLead.jsx';
@@ -75,7 +98,7 @@ import BulkImport from './pages/dealer/crm/leads/BulkImport.jsx';
 import LeadDisposition from './pages/dealer/crm/leads/LeadDisposition.jsx';
 import LeadsPanel from './pages/dealer/crm/leads/LeadsPanel.jsx';
 
-// Customer Module (Enterprise Grade)
+// Customer Module (Enterprise Grade) (unchanged imports)
 import CustomersPanel from './pages/dealer/crm/customers/CustomersPanel.jsx';
 import CustomerDetail from './pages/dealer/crm/customers/CustomerDetail.jsx';
 import CustomerAnalytics from './pages/dealer/crm/customers/CustomerAnalytics.jsx';
@@ -87,7 +110,7 @@ import CustomerTimeline from './pages/dealer/crm/customers/CustomerTimeline.jsx'
 import CustomerProfileDownload from './pages/dealer/crm/customers/CustomerProfileDownload.jsx';
 import CustomerFilterBar from './pages/dealer/crm/customers/CustomerFilterBar.jsx';
 
-// Dealer System Dashboards
+// Dealer System Dashboards (unchanged imports)
 import DealerDashboard from './pages/dealer/dashboard/index.jsx';
 import SalesDashboard from './pages/dealer/sales/dashboard/index.jsx';
 import InventoryDashboard from './pages/dealer/inventory/dashboard/index.jsx';
@@ -97,7 +120,7 @@ import MarketingDashboard from './pages/dealer/marketing/dashboard/index.jsx';
 import ReportsDashboard from './pages/dealer/reports/dashboard/index.jsx';
 import DealerProfile from './pages/dealer/profile/index.jsx';
 
-// Auth Pages
+// Auth Pages (unchanged imports)
 import LoginPage from './pages/login/LoginPage.jsx';
 
 const AppRoutes = () => {
@@ -111,7 +134,8 @@ const AppRoutes = () => {
         path="/dealer/*"
         element={
           <PrivateRoute>
-            <DealerPortalLayout dealerName="Aerion Aerospace Dealers" />
+            {/* DealerPortalLayout handles its own dealerName via Context */}
+            <DealerPortalLayout />
           </PrivateRoute>
         }
       >
@@ -159,6 +183,7 @@ const AppRoutes = () => {
         <Route path="*" element={<Navigate to="dashboard" replace />} />
       </Route>
 
+      {/* Fallback for any other unmatched routes outside /dealer */}
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
