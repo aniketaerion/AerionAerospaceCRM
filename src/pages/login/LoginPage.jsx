@@ -5,6 +5,7 @@ import AuthForm from '@/components/AuthForm'; // CORRECTED IMPORT PATH
 import supabase from '@/supabaseClient';
 import { useAuth } from '@/App';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import AerionLogo from '@/assets/aerion-logo.png'; // Import Aerion Logo
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -75,6 +76,11 @@ const LoginPage = () => {
     <AuthForm onSubmit={handleLogin} type="Login" errorMessage={errorMessage} isLoading={isLoading}>
       {(handleChange, formData) => (
         <>
+          {/* Aerion Logo added to the login form */}
+          <div className="flex justify-center mb-8">
+            <img src={AerionLogo} alt="Aerion Aerospace Logo" className="h-16 w-auto" />
+          </div>
+
           <label className="block text-neutral-dark text-sm font-medium mb-1">
             Email:
             <input
