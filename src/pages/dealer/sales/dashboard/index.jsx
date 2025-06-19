@@ -1,5 +1,5 @@
 // src/pages/dealer/sales/dashboard/index.jsx
-import { WidgetCard } from '@/components/WidgetCard';
+import { WidgetCard } from '@/components/common/WidgetCard';
 
 export default function SalesDashboard() {
   return (

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import LeadConversionMeter from '@/components/shared/widgets/LeadConversionMeter.jsx';
-import { SmartFormField } from '@/components/shared/inputs/SmartFormField';
+import { SmartFormField } from '@/components/common/inputs/SmartFormField';
 
 // Inline mock data instead of importing mockLeads
 const mockLeads = [

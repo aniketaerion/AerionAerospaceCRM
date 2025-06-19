@@ -1,11 +1,10 @@
-// src/main.jsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
-import './index.css';
+import './styles/index.css'; // ✅ CORRECTED PATH
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App /> {/* ✅ No <Router> here — it's already inside App.jsx */}
+    <App />
   </React.StrictMode>
 );

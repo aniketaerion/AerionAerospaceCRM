@@ -5,7 +5,7 @@ import DonutChart from '@/components/shared/charts/DonutChart';
 import BarChart from '@/components/shared/charts/BarChart';
 import TrendLineChart from '@/components/shared/charts/TrendLineChart';
 import ForecastCard from '@/components/shared/widgets/ForecastCard';
-import FilterBar from '@/components/shared/inputs/FilterBar';
+import FilterBar from '@/components/common/inputs/FilterBar';
 
 export default function CustomerAnalytics() {
   const filters = [

@@ -1,8 +1,8 @@
 import React, { useState } from 'react'; // Import useState for mobile sidebar state
-import Header from '@/components/Header';
-import Sidebar from '@/components/Sidebar';
-import Footer from '@/components/Footer';
-import Breadcrumbs from '@/components/Breadcrumbs'; // Import the new Breadcrumbs component
+import Header from '@/components/layout-specific/Header';
+import Sidebar from "@/components/layout-specific/Sidebar"; 
+import Footer from '@/components/layout-specific/Footer';
+import Breadcrumbs from '@/components/common/Breadcrumbs'; // Import the new Breadcrumbs component
 import { DealerContext } from '@/contexts/DealerContext';
 import { Outlet } from 'react-router-dom';
 

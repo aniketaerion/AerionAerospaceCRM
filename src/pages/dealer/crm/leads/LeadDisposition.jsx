@@ -1,6 +1,6 @@
 // src/pages/dealer/crm/leads/LeadDisposition.jsx
 import React, { useState } from 'react';
-import { SmartFormField } from '@/components/shared/inputs/SmartFormField';
+import { SmartFormField } from '@/components/common/inputs/SmartFormField';
 
 export default function LeadDisposition({ onSave }) {
   const [disposition, setDisposition] = useState('');

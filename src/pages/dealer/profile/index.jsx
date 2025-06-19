@@ -1,6 +1,6 @@
 // src/pages/dealer/profile/index.jsx
 import React from 'react';
-import LogoutButton from '@/components/LogoutButton'; // Import LogoutButton
+import LogoutButton from '@/components/auth/LogoutButton'; // Import LogoutButton
 
 const DealerProfile = () => {
   // You would typically fetch user profile data here from Supabase

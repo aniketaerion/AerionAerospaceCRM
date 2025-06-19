@@ -5,13 +5,13 @@ import React, { useState } from 'react';
 // Corrected: Import as default exports (no curly braces) for these components
 import DonutChart from '@/components/shared/charts/DonutChart';
 import TrendLineChart from '@/components/shared/charts/TrendLineChart';
-import FilterBar from '@/components/shared/inputs/FilterBar';
+import FilterBar from '@/components/common/inputs/FilterBar';
 import ExportButton from '@/components/shared/widgets/ExportButton';
 import StatusBadge from '@/components/shared/widgets/StatusBadge';
 
 // Corrected: Import ToggleSwitch as a NAMED export (with curly braces)
 // The error indicates it's not a default export.
-import { ToggleSwitch } from '@/components/shared/inputs/ToggleSwitch';
+import { ToggleSwitch } from '@/components/common/inputs/ToggleSwitch';
 
 
 const dummyPromotions = [

@@ -1,6 +1,6 @@
 // src/pages/dealer/crm/customers/PurchaseHistory.jsx
 import React, { useState } from 'react';
-import FilterBar from '@/components/shared/inputs/FilterBar';
+import FilterBar from '@/components/common/inputs/FilterBar';
 import ExportButton from '@/components/shared/widgets/ExportButton';
 import StatusBadge from '@/components/shared/widgets/StatusBadge';
 

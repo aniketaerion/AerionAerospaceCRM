@@ -1,4 +1,5 @@
-// src/contexts/DealerContext.tsx
+// In: src/contexts/DealerContext.tsx
+
 import { createContext, useContext } from 'react';
 
 interface DealerContextType {

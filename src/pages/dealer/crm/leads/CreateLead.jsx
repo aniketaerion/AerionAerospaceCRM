@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { PhoneInputVerified } from '@/components/shared/inputs/PhoneInputVerified';
-import { SmartFormField } from '@/components/shared/inputs/SmartFormField';
+import { PhoneInputVerified } from '@/components/common/inputs/PhoneInputVerified';
+import { SmartFormField } from '@/components/common/inputs/SmartFormField';
 import { useNavigate } from 'react-router-dom';
-import uniqueId from '@/utils/uniqueId';
+import uniqueId from '@/lib/utils/uniqueId';
 
 export default function CreateLead() {
   const navigate = useNavigate();

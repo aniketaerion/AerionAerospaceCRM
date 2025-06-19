@@ -9,6 +9,54 @@ import {
 } from 'react-router-dom';
 import supabase from '@/supabaseClient';
 
+// --- All local file imports are now updated to use the '@/' alias for consistency. ---
+
+// Layout
+import DealerPortalLayout from '@/layouts/DealerPortalLayout.jsx';
+
+// CRM Leads Module
+import CrmDashboard from '@/pages/dealer/crm/leads/CrmDashboard.jsx';
+import LeadsList from '@/pages/dealer/crm/leads/LeadsList.jsx';
+import CreateLead from '@/pages/dealer/crm/leads/CreateLead.jsx';
+import LeadAnalytics from '@/pages/dealer/crm/leads/LeadPerformance.jsx';
+import Tasks from '@/pages/dealer/crm/leads/Tasks.jsx';
+import Reminders from '@/pages/dealer/crm/leads/Reminders.jsx';
+import Campaigns from '@/pages/dealer/crm/leads/Campaigns.jsx';
+import Contacts from '@/pages/dealer/crm/leads/Contacts.jsx';
+import BulkAssignments from '@/pages/dealer/crm/leads/BulkAssignments.jsx';
+import LeadModuleTabs from '@/pages/dealer/crm/leads/Index.jsx';
+import LeadDetail from '@/pages/dealer/crm/leads/LeadDetail.jsx';
+import BulkImport from '@/pages/dealer/crm/leads/BulkImport.jsx';
+import LeadDisposition from '@/pages/dealer/crm/leads/LeadDisposition.jsx';
+import LeadsPanel from '@/pages/dealer/crm/leads/LeadsPanel.jsx';
+
+// CRM Customers Module
+import CustomersPanel from '@/pages/dealer/crm/customers/CustomersPanel.jsx';
+import CustomerDetail from '@/pages/dealer/crm/customers/CustomerDetail.jsx';
+import CustomerAnalytics from '@/pages/dealer/crm/customers/CustomerAnalytics.jsx';
+import CustomerReferrals from '@/pages/dealer/crm/customers/CustomerReferrals.jsx';
+import CustomerEngagementScore from '@/pages/dealer/crm/customers/CustomerEngagementScore.jsx';
+import CustomerServicePanel from '@/pages/dealer/crm/customers/CustomerServicePanel.jsx';
+import CustomerCalendarView from '@/pages/dealer/crm/customers/CustomerCalendarView.jsx';
+import CustomerTimeline from '@/pages/dealer/crm/customers/CustomerTimeline.jsx';
+import CustomerProfileDownload from '@/pages/dealer/crm/customers/CustomerProfileDownload.jsx';
+import CustomerFilterBar from '@/pages/dealer/crm/customers/CustomerFilterBar.jsx';
+
+// Dealer System Dashboards
+import DealerDashboard from '@/pages/dealer/dashboard/index.jsx';
+import SalesDashboard from '@/pages/dealer/sales/dashboard/index.jsx';
+import InventoryDashboard from '@/pages/dealer/inventory/dashboard/index.jsx';
+import FinanceDashboard from '@/pages/dealer/finance/dashboard/index.jsx';
+import ServiceDashboard from '@/pages/dealer/service/dashboard/index.jsx';
+import MarketingDashboard from '@/pages/dealer/marketing/dashboard/index.jsx';
+import ReportsDashboard from '@/pages/dealer/reports/dashboard/index.jsx';
+import DealerProfile from '@/pages/dealer/profile/index.jsx';
+
+// Auth Pages
+import LoginPage from '@/pages/auth/LoginPage/index.jsx';
+import SignupPage from '@/pages/auth/SignupPage/index.tsx';
+// --- The rest of your application logic remains the same ---
+
 // Auth Context
 const AuthContext = createContext(null);
 export const useAuth = () => {
@@ -75,51 +123,6 @@ const PrivateRoute = ({ children }) => {
   const { authToken } = useAuth();
   return authToken ? children : <Navigate to="/login" replace />;
 };
-
-// Layout
-import DealerPortalLayout from './layouts/DealerPortalLayout.jsx';
-
-// CRM Leads Module
-import CrmDashboard from './pages/dealer/crm/leads/CrmDashboard.jsx'; // This will be the main CRM Dashboard
-import LeadsList from './pages/dealer/crm/leads/LeadsList.jsx';
-import CreateLead from './pages/dealer/crm/leads/CreateLead.jsx';
-import LeadAnalytics from './pages/dealer/crm/leads/LeadPerformance.jsx';
-import Tasks from './pages/dealer/crm/leads/Tasks.jsx';
-import Reminders from './pages/dealer/crm/leads/Reminders.jsx';
-import Campaigns from './pages/dealer/crm/leads/Campaigns.jsx';
-import Contacts from './pages/dealer/crm/leads/Contacts.jsx';
-import BulkAssignments from './pages/dealer/crm/leads/BulkAssignments.jsx';
-import LeadModuleTabs from './pages/dealer/crm/leads/Index.jsx';
-import LeadDetail from './pages/dealer/crm/leads/LeadDetail.jsx';
-import BulkImport from './pages/dealer/crm/leads/BulkImport.jsx';
-import LeadDisposition from './pages/dealer/crm/leads/LeadDisposition.jsx';
-import LeadsPanel from './pages/dealer/crm/leads/LeadsPanel.jsx';
-
-// CRM Customers Module
-import CustomersPanel from './pages/dealer/crm/customers/CustomersPanel.jsx';
-import CustomerDetail from './pages/dealer/crm/customers/CustomerDetail.jsx';
-import CustomerAnalytics from './pages/dealer/crm/customers/CustomerAnalytics.jsx';
-import CustomerReferrals from './pages/dealer/crm/customers/CustomerReferrals.jsx';
-import CustomerEngagementScore from './pages/dealer/crm/customers/CustomerEngagementScore.jsx';
-import CustomerServicePanel from './pages/dealer/crm/customers/CustomerServicePanel.jsx';
-import CustomerCalendarView from './pages/dealer/crm/customers/CustomerCalendarView.jsx';
-import CustomerTimeline from './pages/dealer/crm/customers/CustomerTimeline.jsx';
-import CustomerProfileDownload from './pages/dealer/crm/customers/CustomerProfileDownload.jsx';
-import CustomerFilterBar from './pages/dealer/crm/customers/CustomerFilterBar.jsx';
-
-// Dealer System Dashboards
-import DealerDashboard from './pages/dealer/dashboard/index.jsx';
-import SalesDashboard from './pages/dealer/sales/dashboard/index.jsx';
-import InventoryDashboard from './pages/dealer/inventory/dashboard/index.jsx';
-import FinanceDashboard from './pages/dealer/finance/dashboard/index.jsx';
-import ServiceDashboard from './pages/dealer/service/dashboard/index.jsx';
-import MarketingDashboard from './pages/dealer/marketing/dashboard/index.jsx';
-import ReportsDashboard from './pages/dealer/reports/dashboard/index.jsx';
-import DealerProfile from './pages/dealer/profile/index.jsx';
-
-// Auth Pages
-import LoginPage from './pages/login/LoginPage.jsx';
-import SignupPage from '@/pages/login/SignupPage.jsx'; // Corrected import path
 
 const AppRoutes = () => {
   const location = useLocation();

@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Styles */
+
+.logo-container {
+  @apply text-center mb-6;
+}
+
+.logo-img {
+  width: 120px;
+  height: auto;
+}
+
+.input {
+  @apply w-full p-3 border border-gray-300 rounded-lg outline-none;
+}
+
+.input:focus {
+  box-shadow: 0 0 0 2px hsl(217, 91%, 60%);
+  border-color: #3b82f6;
+}
+
+.btn-primary {
+  @apply bg-blue-600 text-white p-3 rounded-lg border-none cursor-pointer transition-colors;
+}
+
+.btn-primary:hover {
+  @apply bg-blue-700;
+}

@@ -1,7 +1,7 @@
 // src/pages/dealer/crm/leads/LeadsList.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import FilterBar from '@/components/shared/inputs/FilterBar';
+import FilterBar from '@/components/common/inputs/FilterBar';
 import StatusBadge from '@/components/shared/widgets/StatusBadge';
 import LeadConversionMeter from '@/components/shared/widgets/LeadConversionMeter.jsx';
 

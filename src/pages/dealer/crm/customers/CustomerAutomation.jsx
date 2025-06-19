@@ -1,8 +1,8 @@
 // src/pages/dealer/crm/customers/CustomerAutomation.jsx
 import React, { useState, useEffect } from 'react';
-import { ToggleSwitch } from '@/components/shared/inputs/ToggleSwitch';
-import { DateRangePicker } from '@/components/shared/inputs/DateRangePicker';
-import  FilterBar from '@/components/shared/inputs/FilterBar';
+import { ToggleSwitch } from '@/components/common/inputs/ToggleSwitch';
+import { DateRangePicker } from '@/components/common/inputs/DateRangePicker';
+import  FilterBar from '@/components/common/inputs/FilterBar';
 import StatusBadge  from '@/components/shared/widgets/StatusBadge';
 import  ExportButton  from '@/components/shared/widgets/ExportButton';
 
