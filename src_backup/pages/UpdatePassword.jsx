@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../supabaseClient';
+import { supabase } from '@/lib/supabase/supabaseClient.ts';
 
 const UpdatePassword = () => {
   const [password, setPassword] = useState('');

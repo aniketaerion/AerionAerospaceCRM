@@ -7,7 +7,7 @@ import {
   Navigate,
   useLocation,
 } from 'react-router-dom';
-import supabase from '@/supabaseClient';
+import supabase from '@/lib/supabase/supabaseClient.ts';
 
 // Auth Context
 const AuthContext = createContext(null);

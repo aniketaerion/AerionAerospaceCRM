@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import AuthForm from '@/components/auth/AuthForm.jsx';
-import supabase from '@/supabaseClient.js';
+import supabase from '@/lib/supabase/supabaseClient.ts';
 import { useAuth } from '@/App.jsx';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import AerionLogo from '@/assets/images/aerion-logo.png';

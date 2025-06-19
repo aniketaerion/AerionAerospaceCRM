@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import supabase from "../supabaseClient";
+import supabase from '@/lib/supabase/supabaseClient.ts';
 import logo from "../assets/logo.png";
 
 function LoginPage() {

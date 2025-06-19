@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import supabase from '@/supabaseClient.js';
+import supabase from '@/lib/supabase/supabaseClient.ts';
 import { useAuth } from '@/App'; // Or from wherever you export your AuthContext
 import AuthForm from '@/components/auth/AuthForm.jsx';
 import Input from '@/components/Input'; // Assuming you have a reusable Input component

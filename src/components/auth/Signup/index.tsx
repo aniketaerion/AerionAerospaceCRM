@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import supabase from '@/supabaseClient.js';
+import supabase from '@/lib/supabase/supabaseClient.ts';
 import AuthForm from '@/components/auth/AuthForm.jsx'; // Correctly import AuthForm
 import Input from '@/components/common/inputs'; // Assuming you have a reusable Input component
 

@@ -1,4 +1,4 @@
-import supabase from "@/supabaseClient"; // adjust path to your setup
+import supabase from '@/lib/supabase/supabaseClient.ts'; // adjust path to your setup
 
 export async function upsertLead(leadData) {
   const { phone_number, email, created_at = new Date().toISOString() } = leadData;

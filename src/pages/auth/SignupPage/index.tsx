@@ -1,10 +1,10 @@
 // src/pages/login/SignupPage.tsx
+// src/pages/auth/SignupPage/index.tsx
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import AuthForm from '@/components/auth/AuthForm.jsx'; // Import the enhanced AuthForm
-import supabase from '@/supabaseClient.js'; // Import your Supabase client
-import { AuthError } from '@supabase/supabase-js'; // Import Supabase types
-
+import { AuthError } from '@supabase/supabase-js';   // Import AuthError from the library
+import supabase from '@/lib/supabase/supabaseClient'; // No .ts extension
+import AuthForm from '@/components/auth/AuthForm';     // No .jsx extension
 // Define an interface for the form data for better type safety
 interface SignupFormData {
   email?: string;

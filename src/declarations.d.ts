@@ -1,7 +1,7 @@
 // src/declarations.d.ts
 
 // These are your existing declarations
-declare module '@/supabaseClient';
+declare module '@/lib/supabase/supabaseClient.ts';
 declare module '@/components/auth/AuthForm';
 
 // --- Add this new section for image files ---
@@ -24,3 +24,4 @@ declare module '*.jpeg' {
   const value: any;
   export default value;
 }
+declare module '@/components/auth/AuthForm';

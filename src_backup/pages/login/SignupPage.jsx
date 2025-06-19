@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import AuthForm from '@/components/AuthForm'; // CORRECTED IMPORT PATH
-import supabase from '@/supabaseClient';
+import supabase from '@/lib/supabase/supabaseClient.ts';
 
 const SignupPage = () => {
   const navigate = useNavigate();
