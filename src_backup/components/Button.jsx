@@ -1,4 +1,4 @@
-// src/components/Button.jsx
+// 
 import React from 'react';
 
 // Define props interface for better type checking in TS (if you convert to .tsx)

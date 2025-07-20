@@ -1,70 +1,165 @@
 // src/pages/dealer/crm/customers/CustomerAnalytics.jsx
-
-import React from 'react';
+import React, { useState, useMemo } from 'react';
+import { FilterPanel } from '@/components/shared/navigation/FilterPanel';
+import ForecastCard from '@/components/shared/widgets/ForecastCard';
 import DonutChart from '@/components/shared/charts/DonutChart';
 import BarChart from '@/components/shared/charts/BarChart';
 import TrendLineChart from '@/components/shared/charts/TrendLineChart';
-import ForecastCard from '@/components/shared/widgets/ForecastCard';
-import FilterBar from '@/components/common/inputs/FilterBar';
+import {
+  UsersIcon,
+  ChartBarIcon,
+  ArrowPathIcon,
+  ClockIcon,
+} from '@heroicons/react/24/outline';
 
-export default function CustomerAnalytics() {
-  const filters = [
-    { label: 'Segment', key: 'segment', options: ['Farmer', 'Dealer', 'Rental'] },
-    { label: 'Region', key: 'region', options: ['North', 'South', 'East', 'West'] },
-    { label: 'Product', key: 'product', options: ['Agras T30', 'Mule VTOL', 'Scout-VTOL', 'Recon-X'] },
-    { label: 'Classification', key: 'classification', options: ['Prime', 'Loyal', 'Dormant'] }
-  ];
+const mockCustomers = [
+  {
+    id: 'C001',
+    crop: 'Wheat',
+    status: 'Active',
+    repeat: true,
+    ltv: 580000,
+    created_at: '2024-01-10',
+    region: 'North',
+    segment: 'Farmer',
+    product: 'Mule VTOL',
+  },
+  {
+    id: 'C002',
+    crop: 'Rice',
+    status: 'Repeat',
+    repeat: true,
+    ltv: 300000,
+    created_at: '2024-02-12',
+    region: 'South',
+    segment: 'Rental',
+    product: 'Scout-VTOL',
+  },
+  {
+    id: 'C003',
+    crop: 'Wheat',
+    status: 'Dormant',
+    repeat: false,
+    ltv: 150000,
+    created_at: '2023-10-20',
+    region: 'East',
+    segment: 'Dealer',
+    product: 'Recon-X',
+  },
+];
 
-  const segmentData = [
-    { label: 'Farmer', value: 510 },
-    { label: 'Dealer', value: 210 },
-    { label: 'Rental', value: 145 },
-    { label: 'Service Only', value: 87 },
-  ];
+export default function CustomerAnalytics({ customers = mockCustomers }) {
+  const [filters, setFilters] = useState({});
 
-  const productData = [
-    { label: 'Agras T30', value: 240 },
-    { label: 'Mule VTOL 50', value: 180 },
-    { label: 'Scout-VTOL', value: 105 },
-    { label: 'Recon-X', value: 65 },
-    { label: 'Parts & Accessories', value: 330 },
-  ];
+  const filtered = useMemo(() => {
+    return customers.filter(
+      (c) =>
+        (!filters.status || c.status === filters.status) &&
+        (!filters.segment || c.segment === filters.segment) &&
+        (!filters.region || c.region === filters.region) &&
+        (!filters.product || c.product === filters.product)
+    );
+  }, [customers, filters]);
+
+  const total = filtered.length;
+  const repeat = filtered.filter((c) => c.repeat).length;
+  const totalLTV = filtered.reduce((sum, c) => sum + c.ltv, 0);
+  const avgLTV = total ? totalLTV / total : 0;
+
+  const segmentData = useMemo(() => {
+    const map = {};
+    filtered.forEach((c) => {
+      map[c.segment] = (map[c.segment] || 0) + 1;
+    });
+    return Object.entries(map).map(([label, value]) => ({ label, value }));
+  }, [filtered]);
+
+  const productData = useMemo(() => {
+    const map = {};
+    filtered.forEach((c) => {
+      map[c.product] = (map[c.product] || 0) + 1;
+    });
+    return Object.entries(map).map(([label, value]) => ({ label, value }));
+  }, [filtered]);
 
   const repeatBuyerData = [
-    { label: '1x Buyer', value: 420 },
-    { label: '2x Buyer', value: 210 },
-    { label: '3x+ Buyer', value: 85 },
+    { label: 'Repeat', value: repeat },
+    { label: 'New', value: total - repeat },
   ];
 
-  const campaignResponseData = [
-    { label: 'WhatsApp', value: 240 },
-    { label: 'SMS', value: 120 },
-    { label: 'Email', value: 90 },
-    { label: 'Phone Call', value: 150 },
-    { label: 'Referral', value: 85 },
-  ];
-
-  const ltvTrend = [
-    { month: 'Jan', ltv: 1.2 },
-    { month: 'Feb', ltv: 1.5 },
-    { month: 'Mar', ltv: 2.2 },
-    { month: 'Apr', ltv: 2.7 },
-    { month: 'May', ltv: 3.5 },
-    { month: 'Jun', ltv: 4.1 },
-  ];
+  const createdOverTime = useMemo(() => {
+    const map = {};
+    filtered.forEach((c) => {
+      const key = c.created_at.slice(0, 7);
+      map[key] = (map[key] || 0) + 1;
+    });
+    return Object.entries(map).map(([month, count]) => ({
+      month,
+      ltv: count,
+    }));
+  }, [filtered]);
 
   return (
     <div className="p-6 space-y-8">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">📊 Customer Analytics Dashboard</h2>
-        <FilterBar filters={filters} />
+        <FilterPanel
+          filtersConfig={[
+            {
+              id: 'segment',
+              label: 'Segment',
+              type: 'select',
+              options: ['Farmer', 'Dealer', 'Rental'],
+            },
+            {
+              id: 'region',
+              label: 'Region',
+              type: 'select',
+              options: ['North', 'South', 'East', 'West'],
+            },
+            {
+              id: 'product',
+              label: 'Product',
+              type: 'select',
+              options: ['Mule VTOL', 'Scout-VTOL', 'Recon-X'],
+            },
+            {
+              id: 'status',
+              label: 'Status',
+              type: 'select',
+              options: ['Active', 'Repeat', 'Dormant'],
+            },
+          ]}
+          onFilterChange={setFilters}
+          currentFilters={filters}
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <ForecastCard title="Total Customers" value="1,248" growth="+6.2%" />
-        <ForecastCard title="Avg LTV (₹)" value="₹2.8L" growth="+4.1%" />
-        <ForecastCard title="Top Product" value="Parts & Accessories" growth="+9.5%" />
-        <ForecastCard title="Repeat Buyers" value="295" growth="+13.4%" />
+        <ForecastCard
+          title="Total Customers"
+          value={total.toLocaleString()}
+          growth="+6.2%"
+          icon={UsersIcon}
+        />
+        <ForecastCard
+          title="Avg LTV (₹)"
+          value={`₹${avgLTV.toLocaleString()}`}
+          growth="+4.1%"
+          icon={ClockIcon}
+        />
+        <ForecastCard
+          title="Top Segment"
+          value={segmentData[0]?.label || '-'}
+          growth="+9.5%"
+          icon={ChartBarIcon}
+        />
+        <ForecastCard
+          title="Repeat Buyers"
+          value={repeat.toLocaleString()}
+          growth="+13.4%"
+          icon={ArrowPathIcon}
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -73,7 +168,9 @@ export default function CustomerAnalytics() {
           <DonutChart data={segmentData} />
         </div>
         <div className="bg-white rounded shadow p-4">
-          <h3 className="text-lg font-semibold mb-4">Product Purchase Distribution</h3>
+          <h3 className="text-lg font-semibold mb-4">
+            Product Purchase Distribution
+          </h3>
           <BarChart data={productData} xKey="label" yKey="value" />
         </div>
       </div>
@@ -84,14 +181,9 @@ export default function CustomerAnalytics() {
           <DonutChart data={repeatBuyerData} />
         </div>
         <div className="bg-white rounded shadow p-4">
-          <h3 className="text-lg font-semibold mb-4">Campaign Response (Last 30 Days)</h3>
-          <BarChart data={campaignResponseData} xKey="label" yKey="value" />
+          <h3 className="text-lg font-semibold mb-4">LTV Trend (Onboarding)</h3>
+          <TrendLineChart data={createdOverTime} xKey="month" yKey="ltv" />
         </div>
-      </div>
-
-      <div className="bg-white rounded shadow p-4">
-        <h3 className="text-lg font-semibold mb-4">Lifetime Value Trend</h3>
-        <TrendLineChart data={ltvTrend} xKey="month" yKey="ltv" />
       </div>
     </div>
   );

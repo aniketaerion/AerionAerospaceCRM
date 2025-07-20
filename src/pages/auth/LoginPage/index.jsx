@@ -1,142 +1,121 @@
-// src/pages/login/LoginPage.jsx
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import AuthForm from '@/components/auth/AuthForm.jsx';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import supabase from '@/lib/supabase/supabaseClient.ts';
-import { useAuth } from '@/App.jsx';
+import  useAuth from '@/contexts/AuthContext'; // ✅ RIGHT
+
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-import AerionLogo from '@/assets/images/aerion-logo.png';
+import AerionLogo from '@/assets/images/aerion-logo.png'; // Adjust path if needed
 
 const LoginPage = () => {
-  const navigate = useNavigate();
-  const { login: authLogin } = useAuth();
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const handleLogin = async (formData) => {
-    setIsLoading(true);
-    setErrorMessage(null);
-
-    const { email, password } = formData;
-
-    if (!email || !password) {
-      setErrorMessage('Email and password are required.');
-      setIsLoading(false);
-      return;
-    }
-
+  const handleLogin = async () => {
     try {
+      setIsLoading(true);
+      setErrorMessage(null);
+
       const { data, error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: password,
+        email: formData.email,
+        password: formData.password,
       });
 
-      if (error) {
-        setErrorMessage(error.message);
-      } else if (data?.session?.access_token) {
-        authLogin(data.session.access_token);
-        navigate('/dealer/dashboard');
-      } else {
-        setErrorMessage('Invalid credentials or an unexpected error occurred.');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      setErrorMessage('Failed to log in. Please try again.');
+      if (error) throw new Error(error.message);
+      if (data.session) navigate('/dealer/dashboard');
+      else throw new Error('Login successful, but session not created.');
+    } catch (err) {
+      setErrorMessage(err.message);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleForgotPassword = async (email) => {
-    if (!email) {
-      setErrorMessage('Please enter your email to reset the password.');
-      return;
-    }
-    setIsLoading(true);
-    setErrorMessage(null);
-    try {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${window.location.origin}/reset-password`,
-        });
-        if (error) {
-            setErrorMessage(error.message);
-        } else {
-            setErrorMessage('Password reset email sent. Please check your inbox.');
-        }
-    } catch (error) {
-        console.error('Forgot password error:', error);
-        setErrorMessage('Failed to send reset email. Please try again.');
-    } finally {
-        setIsLoading(false);
-    }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleForgotPassword = () => {
+    // Optional: Add your forgot password logic
+    alert('Redirect to forgot password screen');
   };
 
   return (
-    <AuthForm onSubmit={handleLogin} type="Login" errorMessage={errorMessage} isLoading={isLoading}>
-      {(handleChange, formData) => (
-        <>
-          {/* Aerion Logo added to the login form */}
-          <div className="flex justify-center mb-8">
-            <img src={AerionLogo} alt="Aerion Aerospace Logo" className="h-16 w-auto" />
-          </div>
+    <div className="flex min-h-screen items-center justify-center bg-gray-80 px-4">
+      <div className="w-full max-w-md space-y-6 rounded-xl bg-white p-8 shadow-xl">
+        <div className="flex justify-center">
+          <img src={AerionLogo} alt="Aerion Logo" className="h-40 w-auto" />
+        </div>
 
-          <label className="block text-neutral-dark text-sm font-medium mb-1">
-            Email:
+        <h2 className="text-center text-2xl font-bold text-neutral-900">Login</h2>
+
+        <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Email</label>
             <input
               type="email"
               name="email"
-              value={formData.email || ''}
+              value={formData.email}
               onChange={handleChange}
-              className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-aerion-blue focus:border-aerion-blue"
               required
-              autoComplete="email"
+              className="mt-1 w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
             />
-          </label>
-          <label className="block text-neutral-dark text-sm font-medium mb-1">
-            Password:
-            <div className="relative mt-1">
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <div className="relative">
               <input
-                type={showPassword ? "text" : "password"}
+                type={showPassword ? 'text' : 'password'}
                 name="password"
-                value={formData.password || ''}
+                value={formData.password}
                 onChange={handleChange}
-                className="block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-aerion-blue focus:border-aerion-blue pr-10"
                 required
-                autoComplete="current-password"
+                className="mt-1 w-full rounded-md border border-gray-300 p-2 pr-10 shadow-sm focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-aerion-blue focus:outline-none"
-                tabIndex={-1}
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500"
               >
-                {showPassword ? (
-                  <EyeSlashIcon className="h-5 w-5" />
-                ) : (
-                  <EyeIcon className="h-5 w-5" />
-                )}
+                {showPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
               </button>
             </div>
-          </label>
-          <div className="text-right">
-            <button
-              type="button"
-              onClick={() => handleForgotPassword(formData.email)}
-              className="text-sm text-aerion-blue hover:underline focus:outline-none"
-            >
+          </div>
+
+          <div className="flex justify-end text-sm">
+            <button type="button" onClick={handleForgotPassword} className="text-blue-600 hover:underline">
               Forgot Password?
             </button>
           </div>
-          <p className="text-center text-sm mt-4">
-            Don't have an account?{' '}
-            <Link to="/signup" className="text-aerion-blue hover:underline font-semibold">
+
+          {errorMessage && (
+            <div className="text-red-600 text-sm text-center bg-red-50 p-2 rounded-md">
+              {errorMessage}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full rounded-md bg-blue-600 py-2 text-white font-semibold hover:bg-blue-700"
+          >
+            {isLoading ? 'Logging in...' : 'Login'}
+          </button>
+
+          <p className="text-center text-sm text-gray-600">
+            Don’t have an account?{' '}
+            <a href="/signup" className="text-blue-600 hover:underline font-semibold">
               Sign up
-            </Link>
+            </a>
           </p>
-        </>
-      )}
-    </AuthForm>
+        </form>
+      </div>
+    </div>
   );
 };
 

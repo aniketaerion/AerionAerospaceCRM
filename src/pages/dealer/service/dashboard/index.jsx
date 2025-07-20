@@ -1,5 +1,5 @@
 // src/pages/dealer/service/dashboard/index.jsx
-import { WidgetCard } from '@/components/common/WidgetCard';
+import  WidgetCard from '@/components/common/WidgetCard';
 
 export default function ServiceDashboard() {
   return (

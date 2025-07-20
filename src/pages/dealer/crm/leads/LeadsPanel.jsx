@@ -5,7 +5,7 @@ import {Tabs} from '@/components/shared/navigation/Tabs';
 import LeadsList from './LeadsList';
 import CreateLead from './CreateLead';
 import BulkImport from './BulkImport';
-import LeadAnalytics from './LeadPerformance';
+import LeadAnalytics from './LeadAnalytics';
 import LeadKanbanView from './LeadKanbanView';
 import BulkAssignments from './BulkAssignments';
 import { BackButton } from '@/components/shared/navigation/BackButton';
@@ -49,7 +49,13 @@ export default function LeadsPanel() {
 
       <div className="text-sm text-gray-500">Last synced: 2 mins ago</div>
 
-      <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
+      {/* This is the line with the critical fix: basePath="/dealer/crm/leads/panel" is added */}
+      <Tabs
+        tabs={tabs}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        basePath="/dealer/crm/leads/panel" // <-- THIS IS THE ADDITION
+      />
 
       <div className="bg-white p-4 shadow rounded-lg">
         {renderTab()}

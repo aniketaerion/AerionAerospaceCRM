@@ -1,6 +1,8 @@
+// src/Navbar.jsx
+
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import logo from '../assets/images/logo.png'; // ✅ Ensure correct path
+import logo from '../assets/images/logo.png'; // ✅ Ensure correct path, consider using @/assets/images/logo.png if configured
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -8,7 +10,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
-    navigate('/login');
+    navigate('/login'); // Assuming '/login' is correct for your auth flow
   };
 
   return (
@@ -17,10 +19,11 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link to={isLoggedIn ? "/dashboard" : "/login"}>
+            {/* CORRECTED: Logo link should point to the correct portal dashboard */}
+            <Link to={isLoggedIn ? "/dealer/dashboard" : "/login"}>
               <img
-                src={logo}
-                alt="Aerion Aerospace Logo"
+                src={logo} // Make sure this path resolves correctly (e.g., using @ alias)
+                alt="Shakti Agro Drones Logo" // Updated Alt text
                 className="h-10 w-auto"
               />
             </Link>
@@ -31,17 +34,20 @@ const Navbar = () => {
             {isLoggedIn && (
               <>
                 <li>
-                  <Link to="/dashboard" className="hover:text-blue-600">
+                  {/* CORRECTED: Dashboard link should point to the correct portal dashboard */}
+                  <Link to="/dealer/dashboard" className="hover:text-blue-600">
                     Dashboard
                   </Link>
                 </li>
                 <li>
+                  {/* Verify this path if 'leadform' is under /dealer/. If so, change to /dealer/leadform */}
                   <Link to="/leadform" className="hover:text-blue-600">
                     Lead Form
                   </Link>
                 </li>
               </>
             )}
+            {/* Public/General Links - verify if these are always public or should be under /dealer/ */}
             <li>
               <Link to="/about" className="hover:text-blue-600">
                 About
@@ -55,6 +61,7 @@ const Navbar = () => {
             <li>
               <Link to="/support" className="hover:text-blue-600">
                 Support
+              
               </Link>
             </li>
 

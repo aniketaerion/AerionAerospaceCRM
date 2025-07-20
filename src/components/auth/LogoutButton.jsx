@@ -1,21 +1,19 @@
-// src/components/LogoutButton.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/App'; // Import useAuth context from App
+import { useAuth } from '@/contexts/AuthContext'; // ✅ Correct path to AuthContext
 
 const LogoutButton = () => {
   const navigate = useNavigate();
-  const { logout: authLogout } = useAuth(); // Get the logout function from AuthContext
+  const { logout: authLogout } = useAuth(); // ✅ Access logout from AuthContext
 
   const handleLogout = async () => {
     try {
-      await authLogout(); // Call the logout function from AuthContext
+      await authLogout(); // Call logout
       console.log('Successfully logged out.');
-      navigate('/login'); // Redirect to login page after logout
+      navigate('/login'); // Redirect after logout
     } catch (error) {
       console.error('Logout error:', error.message);
-      // In a real app, you'd show a user-friendly modal/toast message here instead of console.error for user.
-      console.error('Logout failed. Please try again.'); 
+      console.error('Logout failed. Please try again.');
     }
   };
 

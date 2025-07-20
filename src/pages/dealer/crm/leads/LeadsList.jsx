@@ -1,152 +1,121 @@
 // src/pages/dealer/crm/leads/LeadsList.jsx
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import FilterBar from '@/components/common/inputs/FilterBar';
-import StatusBadge from '@/components/shared/widgets/StatusBadge';
-import LeadConversionMeter from '@/components/shared/widgets/LeadConversionMeter.jsx';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useCrmStore } from '@/store/crmStore';
+import TopHeaderBar from '@/components/shared/navigation/TopHeaderBar';
+import { DateRangeSelector } from '@/components/shared/navigation/DateRangeSelector';
+import { FilterPanel } from '@/components/shared/navigation/FilterPanel';
+import { LeadCard } from '@/components/shared/ui/LeadCard';
+import { useSearchParams } from 'react-router-dom'; // For URL state
 
-const dummyLeads = [
-  {
-    id: 1,
-    firstName: 'Rajesh',
-    lastName: 'Kumar',
-    status: 'New',
-    location: 'Haryana',
-    customerType: 'Farmer',
-    acreage: 12,
-    source: 'Aerion Campaign',
-    assignedTo: 'Sales Executive 3',
-    language: 'Hindi',
-    pinCode: '123456',
-    tags: ['Sprayer', 'High Value'],
-    productInterest: 'Spraying Drone',
-    interestLevel: 'Hot',
-    stage: 'Call',
-    mobile: '9876543210'
-  },
-  {
-    id: 2,
-    firstName: 'Dealer',
-    lastName: 'One',
-    status: 'Contacted',
-    location: 'Punjab',
-    customerType: 'Dealer',
-    acreage: null,
-    source: 'Referral',
-    assignedTo: 'Sales Executive 1',
-    language: 'Punjabi',
-    pinCode: '140301',
-    tags: ['Bulk Buyer'],
-    productInterest: 'Agri Drone',
-    interestLevel: 'Warm',
-    stage: 'Demo',
-    mobile: '9876500000'
-  }
-];
 
 export default function LeadsList() {
-  const [search, setSearch] = useState('');
-  const [filters, setFilters] = useState({
-    status: '',
-    interestLevel: '',
-    region: '',
-    assignedTo: ''
-  });
-  const navigate = useNavigate();
+  const leads = useCrmStore((state) => state.leads);
+  const loading = useCrmStore((state) => state.loading);
+  const fetchLeads = useCrmStore((state) => state.fetchLeads);
+  const users = useCrmStore((state) => state.users);
 
-  const filteredLeads = dummyLeads.filter((lead) => {
-    const matchesSearch = Object.values(lead).some(value =>
-      value?.toString().toLowerCase().includes(search.toLowerCase())
-    );
-    const matchesStatus = !filters.status || lead.status === filters.status;
-    const matchesInterest = !filters.interestLevel || lead.interestLevel === filters.interestLevel;
-    const matchesRegion = !filters.region || lead.pinCode?.startsWith(filters.region);
-    const matchesAssignee = !filters.assignedTo || lead.assignedTo === filters.assignedTo;
-    return matchesSearch && matchesStatus && matchesInterest && matchesRegion && matchesAssignee;
+  const [searchParams, setSearchParams] = useSearchParams(); // For URL state
+  const initialDateRange = searchParams.get('dateRange') || 'all_time';
+  const initialSearch = searchParams.get('search') || '';
+  const initialStatus = searchParams.get('status') || '';
+  const initialSource = searchParams.get('source') || '';
+  const initialAssignedTo = searchParams.get('assignedTo') || '';
+
+
+  const [dateRange, setDateRange] = useState(initialDateRange);
+  const [filters, setFilters] = useState({
+    status: initialStatus,
+    source: initialSource,
+    assignedTo: initialAssignedTo,
+    search: initialSearch,
   });
+
+  // Effect to update URL search params when dateRange or filters change
+  useEffect(() => {
+    const newSearchParams = new URLSearchParams();
+    if (dateRange && dateRange !== 'all_time') newSearchParams.set('dateRange', dateRange);
+    if (filters.search) newSearchParams.set('search', filters.search);
+    if (filters.status) newSearchParams.set('status', filters.status);
+    if (filters.source) newSearchParams.set('source', filters.source);
+    if (filters.assignedTo) newSearchParams.set('assignedTo', filters.assignedTo);
+    setSearchParams(newSearchParams, { replace: true });
+  }, [dateRange, filters, setSearchParams]);
+
+
+  // Fetch leads based on date range and filters
+  useEffect(() => {
+    fetchLeads({ dateRange, ...filters });
+    // Polling for "real-time" updates
+    const interval = setInterval(() => {
+      fetchLeads({ dateRange, ...filters });
+    }, 30000); // Poll every 30 seconds
+    return () => clearInterval(interval);
+  }, [dateRange, filters, fetchLeads]);
+
+  const handleFilterChange = (newFilter) => {
+    setFilters((prev) => {
+        const updatedFilters = { ...prev, ...newFilter };
+        // Ensure that empty strings properly clear the filter
+        Object.keys(updatedFilters).forEach(key => {
+            if (updatedFilters[key] === '') {
+                delete updatedFilters[key];
+            }
+        });
+        return updatedFilters;
+    });
+  };
+
+  const leadStatuses = useMemo(() => [
+    { value: 'New', label: 'New' },
+    { value: 'Contacted', label: 'Contacted' },
+    { value: 'Pitched', label: 'Pitched' },
+    { value: 'Qualified', label: 'Qualified' },
+    { value: 'Disqualified', label: 'Disqualified' },
+  ], []);
+
+  const leadSources = useMemo(() => [
+    { value: 'Website', label: 'Website' },
+    { value: 'Referral', label: 'Referral' },
+    { value: 'Campaign', label: 'Campaign' },
+    { value: 'Partnership', label: 'Partnership' },
+    { value: 'Social Media', label: 'Social Media' },
+  ], []);
+
+  const assignedUsersOptions = useMemo(() => users.map(user => ({ value: user.id, label: user.name })), [users]);
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex flex-wrap gap-4 justify-between items-center">
-        <h2 className="text-2xl font-bold">📋 Leads List</h2>
-        <div className="space-x-2">
-          <button onClick={() => navigate('/dealer/crm/leads/create')} className="bg-blue-600 text-white px-4 py-2 rounded">+ New Lead</button>
-          <button onClick={() => navigate('/dealer/crm/leads/bulk-import')} className="bg-gray-700 text-white px-4 py-2 rounded">⬆️ Bulk Import</button>
+    <div className="space-y-6 p-4">
+      <div className="flex justify-between items-center mb-4">
+        <TopHeaderBar title="All Leads" />
+        <DateRangeSelector selectedRange={dateRange} onRangeChange={setDateRange} />
+      </div>
+
+      <FilterPanel
+        filtersConfig={[
+          { id: 'search', label: 'Search Name/Company/Email', type: 'text' },
+          { id: 'status', label: 'Status', type: 'select', options: leadStatuses },
+          { id: 'source', label: 'Lead Source', type: 'select', options: leadSources },
+          { id: 'assignedTo', label: 'Assigned To', type: 'select', options: assignedUsersOptions },
+        ]}
+        onFilterChange={handleFilterChange}
+        currentFilters={filters}
+      />
+
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="p-4 rounded-lg shadow-sm border border-gray-200 h-40 animate-pulse bg-gray-100"></div>
+          ))}
         </div>
-      </div>
-
-      <div className="flex gap-4 items-center">
-        <input
-          type="text"
-          placeholder="🔍 Search..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border px-4 py-2 rounded w-64"
-        />
-        <FilterBar filters={filters} setFilters={setFilters} fields={["status", "interestLevel", "region", "assignedTo"]} />
-      </div>
-
-      <div className="overflow-x-auto rounded shadow border bg-white">
-        <table className="min-w-full text-sm">
-          <thead className="bg-gray-100 text-left">
-            <tr>
-              <th className="p-3">Name</th>
-              <th className="p-3">Location</th>
-              <th className="p-3">Type</th>
-              <th className="p-3">Acreage</th>
-              <th className="p-3">Stage</th>
-              <th className="p-3">Conversion</th>
-              <th className="p-3">Status</th>
-              <th className="p-3">Interest</th>
-              <th className="p-3">Language</th>
-              <th className="p-3">Pincode</th>
-              <th className="p-3">Product</th>
-              <th className="p-3">Source</th>
-              <th className="p-3">Assigned</th>
-              <th className="p-3">Tags</th>
-              <th className="p-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredLeads.length > 0 ? (
-              filteredLeads.map((lead) => (
-                <tr key={lead.id} className="border-t hover:bg-gray-50">
-                  <td className="p-3">{lead.firstName} {lead.lastName}</td>
-                  <td className="p-3">{lead.location}</td>
-                  <td className="p-3">{lead.customerType}</td>
-                  <td className="p-3">{lead.acreage || '-'}</td>
-                  <td className="p-3">{lead.stage}</td>
-                  <td className="p-3"><LeadConversionMeter stage={lead.stage} /></td>
-                  <td className="p-3"><StatusBadge status={lead.status} /></td>
-                  <td className="p-3">{lead.interestLevel}</td>
-                  <td className="p-3">{lead.language}</td>
-                  <td className="p-3">{lead.pinCode}</td>
-                  <td className="p-3">{lead.productInterest}</td>
-                  <td className="p-3">{lead.source}</td>
-                  <td className="p-3">{lead.assignedTo}</td>
-                  <td className="p-3">
-                    {lead.tags?.map((tag) => (
-                      <span key={tag} className="inline-block bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded mr-1">{tag}</span>
-                    ))}
-                  </td>
-                  <td className="p-3">
-                    <button
-                      onClick={() => navigate(`/dealer/crm/leads/detail/${lead.id}`)}
-                      className="text-blue-600 hover:underline text-sm"
-                    >
-                      View
-                    </button>
-                  </td>
-                </tr>
-              ))     
-            ) : (
-              <tr>
-                <td colSpan="15" className="p-4 text-center text-gray-500">No matching leads found.</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {leads.length > 0 ? (
+            leads.map((lead) => <LeadCard key={lead.id} lead={lead} />)
+          ) : (
+            <p className="text-gray-600 col-span-full text-center py-8">No leads found for the selected criteria. Try adjusting your filters.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

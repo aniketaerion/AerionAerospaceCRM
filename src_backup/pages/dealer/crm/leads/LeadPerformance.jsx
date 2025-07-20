@@ -1,5 +1,5 @@
 
-// src/pages/dealer/crm/leads/LeadPerformance.jsx
+// src/pages/dealer/crm/leads/LeadAnalytics.jsx
 
 import React, { useState } from 'react';
 

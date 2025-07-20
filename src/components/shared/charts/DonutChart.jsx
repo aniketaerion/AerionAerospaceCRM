@@ -1,45 +1,48 @@
 // src/components/shared/charts/DonutChart.jsx
 import React from 'react';
-import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Doughnut } from 'react-chartjs-2';
+// Assuming Recharts or similar for donut/pie charts
+// import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
-
-ChartJS.register(ArcElement, Tooltip, Legend);
-
-export default function DonutChart({ labels, data, title }) {
-  const chartData = {
-    labels,
-    datasets: [
-      {
-        data,
-        backgroundColor: ['#0047AB', '#FFF000', '#FFB703', '#219EBC'],
-        borderColor: '#fff',
-        borderWidth: 2,
-      },
-    ],
-  };
-
-  const options = {
-    cutout: '60%',
-    plugins: {
-      legend: {
-        position: 'right',
-      },
-      tooltip: {
-        callbacks: {
-          label: function (context) {
-            return `${context.label}: ${context.raw}`;
-          },
-        },
-      },
-    },
-  };
+const DonutChartComponent = ({ data }) => { // Renamed to DonutChartComponent
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']; // Example colors
 
   return (
-    <div className="w-full max-w-md mx-auto bg-white p-4 rounded shadow">
-      <h3 className="text-lg font-semibold text-center mb-3">{title}</h3>
-      <Pie data={chartData} options={options} />
+    <div className="bg-white p-4 rounded-lg shadow-md border border-gray-100 h-full flex flex-col items-center justify-center">
+      <h3 className="text-lg font-semibold text-gray-800 mb-2">Donut Chart</h3>
+      {data && data.length > 0 ? (
+        <div style={{ width: '100%', height: 300 }}>
+          {/* Example Recharts usage:
+          <ResponsiveContainer>
+            <PieChart>
+              <Pie
+                data={data}
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={90}
+                fill="#8884d8"
+                paddingAngle={5}
+                dataKey="value"
+                label
+              >
+                {data.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+          */}
+          <div className="flex items-center justify-center h-full border border-dashed border-gray-300 text-gray-500">
+            <p>Chart content for Donut Chart will go here.</p>
+          </div>
+        </div>
+      ) : (
+        <p className="text-gray-500 text-sm">No data available for this chart.</p>
+      )}
     </div>
   );
-}
+};
+
+export default DonutChartComponent; // CRITICAL: This must be a default export

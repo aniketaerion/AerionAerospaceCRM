@@ -1,51 +1,47 @@
-// src/components/AuthForm.jsx
-import React, { useState } from 'react';
-import Button from '@/components/common/Button'; // Assuming you have this Button component
+// src/contexts/AuthContext.jsx
 
-// Define PropTypes (for JS) or Interface (for TSX) for clarity
-// interface AuthFormProps {
-//   onSubmit: (formData: Record<string, string>) => void;
-//   type: 'Login' | 'Signup';
-//   children: (handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void, formData: Record<string, string>) => React.ReactNode;
-//   errorMessage?: string | null;
-//   isLoading?: boolean;
-// }
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import supabase from '@/lib/supabase/supabaseClient';
 
-const AuthForm = ({ onSubmit, type, children, errorMessage, isLoading }) => {
-  const [formData, setFormData] = useState({});
+const AuthContext = createContext();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(formData);
-  };
+  useEffect(() => {
+    const getUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setUser(user);
+      setLoading(false);
+    };
 
-  return (
-    <div className="flex justify-center items-center min-h-screen bg-neutral-light font-inter">
-      <div className="bg-neutral-white p-8 rounded-xl shadow-custom-medium w-full max-w-md">
+    getUser();
 
-        <h2 className="text-3xl font-bold text-center text-aerion-blue mb-8">{type}</h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Render children (form fields) passed from parent */}
-          {children(handleChange, formData)}
+    const { data: subscription } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user || null);
+    });
 
-          {errorMessage && (
-            <div className="text-red-600 text-sm text-center">
-              {errorMessage}
-            </div>
-          )}
+    return () => {
+      subscription?.unsubscribe();
+    };
+  }, []);
 
-          <Button type="submit" variant="primary" className="w-full py-3" disabled={isLoading}>
-            {isLoading ? 'Processing...' : type}
-          </Button>
-        </form>
-      </div>
-    </div>
-  );
+  return (
+    <AuthContext.Provider value={{ user, loading }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-export default AuthForm;
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
+
+export default AuthProvider;

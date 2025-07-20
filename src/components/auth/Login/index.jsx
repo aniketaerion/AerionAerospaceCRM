@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import supabase from '@/lib/supabase/supabaseClient.ts';
-import { useAuth } from '@/App'; // Or from wherever you export your AuthContext
-import AuthForm from '@/components/auth/AuthForm.jsx';
-import Input from '@/components/Input'; // Assuming you have a reusable Input component
+import useAuth from '@/contexts/AuthContext';
+import { AuthForm } from '@/components/auth/AuthForm';
+import Input from '@/components/Input';
+import logo from '@/assets/images/aerion-logo.png'; // Adjust path if needed
 
 const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState(null);
@@ -15,25 +15,16 @@ const LoginPage = () => {
     try {
       setIsLoading(true);
       setErrorMessage(null);
-
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { session } = await login({
         email: formData.email,
         password: formData.password,
       });
 
-      if (error) {
-        throw new Error(error.message || 'An unknown error occurred.');
-      }
-
-      if (data.session) {
-        // The onAuthStateChange listener in App.jsx will handle setting the context.
-        // We just need to navigate the user to the dashboard.
+      if (session) {
         navigate('/dealer/dashboard');
       } else {
-        // This case is unlikely with Supabase but good for defensive programming
         throw new Error('Login successful, but no session was created.');
       }
-
     } catch (error) {
       setErrorMessage(error.message);
     } finally {
@@ -42,35 +33,61 @@ const LoginPage = () => {
   };
 
   return (
-    <AuthForm
-      onSubmit={handleLogin}
-      type="Login"
-      errorMessage={errorMessage}
-      isLoading={isLoading}
-    >
-      {(handleChange) => (
-        <>
-          <Input
-            label="Email Address"
-            type="email"
-            name="email"
-            id="email"
-            placeholder="you@example.com"
-            onChange={handleChange}
-            required
-          />
-          <Input
-            label="Password"
-            type="password"
-            name="password"
-            id="password"
-            placeholder="••••••••"
-            onChange={handleChange}
-            required
-          />
-        </>
-      )}
-    </AuthForm>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md space-y-6 text-center">
+        
+        {/* Centered Logo */}
+        <div className="flex justify-center">
+          <img src={logo} alt="Aerion Logo" className="h-24 w-auto rounded-md" />
+        </div>
+
+        <h2 className="text-2xl font-bold text-gray-800">Login</h2>
+
+        <AuthForm
+          onSubmit={handleLogin}
+          type="Login"
+          errorMessage={errorMessage}
+          isLoading={isLoading}
+        >
+          {(handleChange) => (
+            <div className="space-y-4 text-left">
+              <Input
+                label="Email"
+                type="email"
+                name="email"
+                id="email"
+                placeholder="you@example.com"
+                onChange={handleChange}
+                required
+              />
+              <Input
+                label="Password"
+                type="password"
+                name="password"
+                id="password"
+                placeholder="••••••••"
+                onChange={handleChange}
+                required
+              />
+              <div className="text-right text-sm">
+                <a href="#" className="text-blue-600 hover:underline">Forgot Password?</a>
+              </div>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-2 px-4 bg-aerion-blue text-white rounded hover:bg-blue-700 transition"
+              >
+                {isLoading ? 'Logging in...' : 'Login'}
+              </button>
+            </div>
+          )}
+        </AuthForm>
+
+        <p className="text-sm text-gray-600">
+          Don’t have an account? <a href="/signup" className="text-blue-600 hover:underline">Sign up</a>
+        </p>
+      </div>
+    </div>
   );
 };
 

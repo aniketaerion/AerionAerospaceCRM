@@ -1,37 +1,47 @@
-/** @type {import('tailwindcss').Config} */
+const forms = require('@tailwindcss/forms');
+
 module.exports = {
   content: [
-    "./index.html",
-    "./src/**/*.{js,jsx,ts,tsx}",
+    './index.html',
+    './src/**/*.{js,ts,jsx,tsx}',
+  ],
+  safelist: [
+    'bg-primary', 'text-primary',
+    'bg-secondary', 'text-secondary',
+    'text-neutral-dark', 'text-neutral-medium',
+    'bg-neutral-dark', 'bg-neutral-medium',
+    'text-white', 'bg-white',
+    'hover:bg-primary', 'hover:text-primary',
+    'hover:bg-secondary', 'hover:text-secondary',
+    'hover:text-white', 'hover:bg-white',
   ],
   theme: {
     extend: {
       colors: {
-        // Updated Aerion brand colors with shades for better UI effects
-        'aerion-blue': {
-          DEFAULT: '#2B3E93',  // Base blue from the logo
-          light: '#425AD0',   // Lighter shade for subtle accents or backgrounds
-          dark: '#1C2C6E',    // Darker shade for hover states or deeper elements
-        },
-        'aerion-yellow': {
-          DEFAULT: '#FFDE00', // Base yellow from the logo
-          dark: '#E6CC00',    // Darker shade for hover states or strong accents
-        },
-        // Neutral palette for backgrounds, text, borders
-        'neutral-dark': '#1A1A1A',   // Very dark gray, almost black, for main text/elements
-        'neutral-medium': '#4A4A4A', // Medium gray for secondary text
-        'neutral-light': '#F8F8F8',  // Very light gray for backgrounds
-        'neutral-white': '#FFFFFF',  // Pure white for content cards/panels
+        primary: '#0047AB',         // Aerion Blue
+        secondary: '#FFF000',       // Bright Yellow
+        dark: '#000000',
+        light: '#FFFFFF',
+        success: '#00B894',
+        danger: '#E17055',
+        warning: '#FDCB6E',
+        info: '#0984E3',
+        'neutral-dark': '#2D3436',
+        'neutral-medium': '#A4A4A4',
+        'neutral-light': '#F8F8F8',
+        'neutral-white': '#FFFFFF',
       },
-      // You can extend other Tailwind properties here if needed (e.g., fontSize, spacing)
       fontFamily: {
-        inter: ['Inter', 'sans-serif'], // Example: If you want to use the Inter font
+        inter: ['Inter', 'sans-serif'],
       },
       boxShadow: {
-        'custom-light': '0 4px 10px rgba(0, 0, 0, 0.05)', // Custom light shadow
-        'custom-medium': '0 8px 20px rgba(0, 0, 0, 0.1)', // Custom medium shadow
-      }
+        'custom-light': '0 4px 10px rgba(0, 0, 0, 0.05)',
+      },
+      borderRadius: {
+        '2xl': '1rem',
+        '3xl': '1.5rem',
+      },
     },
   },
-  plugins: [],
+  plugins: [forms],
 };

@@ -1,5 +1,5 @@
 // src/components/WidgetCard.jsx
-export function WidgetCard({ title, value, icon }) {
+const WidgetCard = ({ title, value, icon }) => {
   return (
     <div className="bg-white rounded-xl shadow p-4 flex items-center gap-4">
       <div className="text-3xl">{icon}</div>
@@ -9,4 +9,6 @@ export function WidgetCard({ title, value, icon }) {
       </div>
     </div>
   );
-}
+};
+
+export default WidgetCard;
