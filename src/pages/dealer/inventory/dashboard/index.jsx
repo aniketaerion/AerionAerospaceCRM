@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/shared/ui
 import { DollarSign, Package, AlertTriangle, XCircle, TrendingUp } from 'lucide-react'; // Assuming lucide-react for icons
 import { Skeleton } from '@/components/shared/ui/Skeleton.jsx'; // Assuming shadcn/ui Skeleton component
 import { Button } from '@/components/shared/ui/Button.jsx'; // Assuming shadcn/ui Button component
-import {Link} from 'next'; // Or react-router-dom Link if not Next.js
+import { Link } from 'react-router-dom'; // Or react-router-dom Link if not Next.js
 
 // Mock API call function - replace with actual API calls
 async function fetchInventoryData() {

@@ -1,8 +1,9 @@
-// src/pages/UpdatePassword.jsx
+// src/pages/auth/UpdatePassword/index.jsx
+// src/pages/auth/UpdatePassword/index.jsx
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/lib/supabase/supabaseClient.ts';
+import  supabase  from '@/lib/supabase/supabaseClient'; // Adjust the import based on your project structure
 
 const UpdatePassword = () => {
   const [password, setPassword] = useState('');
