@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import supabase from '@/lib/supabase/supabaseClient.ts';
-import  useAuth from '@/contexts/AuthContext'; // ✅ RIGHT
+import { useAuth } from '@/contexts/AuthContext';
 
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import AerionLogo from '@/assets/images/aerion-logo.png'; // Adjust path if needed
