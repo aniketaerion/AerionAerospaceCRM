@@ -12,7 +12,7 @@ const PageLoader = () => (
 
 // Public Pages
 const LoginPage = lazy(() => import('@/pages/auth/LoginPage/index.jsx'));
-const SignupPage = lazy(() => import('@/pages/auth/SignupPage/index.tsx'));
+const SignupPage = lazy(() => import('@/pages/auth/SignupPage/index.jsx'));
 const ResetPassword = lazy(() => import('@/pages/auth/ResetPassword/index.jsx'));
 const UpdatePassword = lazy(() => import('@/pages/auth/UpdatePassword/index.jsx'));
 

@@ -1,10 +1,11 @@
 // src/App.jsx
-
 import React from 'react';
-import AppRoutes from './routes'; // ✅ Centralized route tree
+import AppRoutes from './routes'; // Import your routes component
 
 const App = () => {
-  return <AppRoutes />;
+  return (
+    <AppRoutes />
+  );
 };
 
 export default App;

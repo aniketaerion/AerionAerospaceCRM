@@ -31,9 +31,14 @@ export const AuthForm = ({ onSubmit, type, errorMessage, isLoading, children }) 
    * @param {Event} e - The submit event from the form.
    */
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    onSubmit(formData); // Pass the current formData to the parent's onSubmit handler
-  };
+  e.preventDefault();
+  if (!formData.email || !formData.password) {
+    alert("Email and password are required.");
+    return;
+  }
+  onSubmit(formData); 
+};
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4"> {/* Added some basic styling */}
